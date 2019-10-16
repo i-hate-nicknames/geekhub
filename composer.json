@@ -1,0 +1,12 @@
+{
+    "name": "nvm/hw1",
+    "description": "smth",
+    "type": "project",
+    "license": "MIT",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "GeekhubShop\\": "src/"
+        }
+    }
+}
