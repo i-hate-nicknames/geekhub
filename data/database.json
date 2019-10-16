@@ -25,7 +25,7 @@
     },
     {
       "name": "b",
-      "qty": 5,
+      "qty": 0,
       "category": 1
     },
     {
@@ -35,8 +35,12 @@
     },
     {
       "name": "d",
-      "qty": 5,
+      "qty": 3,
       "category": 3
+    },
+    {
+      "name": "e",
+      "qty": 1
     }
   ]
 }
