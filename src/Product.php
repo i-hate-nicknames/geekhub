@@ -10,7 +10,7 @@ class Product
     /** @var int */
     private $qty;
 
-    /** @var int */
+    /** @var Category */
     private $category;
 
     /**
@@ -55,7 +55,7 @@ class Product
     }
 
     /**
-     * @return int
+     * @return Category
      */
     public function getCategory()
     {
@@ -63,9 +63,9 @@ class Product
     }
 
     /**
-     * @param int $category
+     * @param Category $category
      */
-    public function setCategory($category)
+    public function setCategory(Category $category)
     {
         $this->category = $category;
     }
