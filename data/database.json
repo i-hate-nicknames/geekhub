@@ -1,0 +1,42 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "I"
+    },
+    {
+      "id": 2,
+      "name": "II"
+    },
+    {
+      "id": 3,
+      "name": "III"
+    },
+    {
+      "id": 4,
+      "name": "IV"
+    }
+  ],
+  "products": [
+    {
+      "name": "a",
+      "qty": 5,
+      "category": 1
+    },
+    {
+      "name": "b",
+      "qty": 5,
+      "category": 1
+    },
+    {
+      "name": "c",
+      "qty": 5,
+      "category": 2
+    },
+    {
+      "name": "d",
+      "qty": 5,
+      "category": 3
+    }
+  ]
+}
