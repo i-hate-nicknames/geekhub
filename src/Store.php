@@ -36,11 +36,11 @@ class Store
     }
 
     /**
-     * @param string $productName
+     * @param string $productId
      * @return Product
      * @throws \Exception
      */
-    public function getProduct(string $productName): Product
+    public function getProduct(string $productId): Product
     {
         throw new \Exception('Not implemented');
     }

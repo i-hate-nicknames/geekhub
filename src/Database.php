@@ -38,7 +38,7 @@ class Database
         }
         foreach ($db['products'] as $productDefinition) {
             $product = new Product($productDefinition['name'], $productDefinition['qty']);
-            $this->products[$product->getName()] = $product;
+            $this->products[$product->getId()] = $product;
             if (array_key_exists('category', $productDefinition)) {
                 $catId = $productDefinition['category'];
                 $cat = $this->categories[$catId];
