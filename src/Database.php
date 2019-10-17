@@ -99,6 +99,12 @@ class Database
         return $result;
     }
 
+    public function addProduct(Product $product)
+    {
+        $this->load();
+        $this->products[$product->getId()] = $product;
+    }
+
     private function serializeCategory(Category $category): array
     {
         return [

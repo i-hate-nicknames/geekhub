@@ -4,6 +4,9 @@ use GeekhubShop\Database;
 use GeekhubShop\Product;
 use GeekhubShop\Store;
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 function initStore(): Store {
@@ -22,6 +25,13 @@ function run($args) {
     switch ($command) {
         case 'showProducts':
             showProducts();
+            break;
+        case 'createProduct':
+            if (count($actualArgs) != 2) {
+                printf("Please provide name and quantity for new product\n");
+                return;
+            }
+            createProduct($actualArgs[0], (int) $actualArgs[1]);
             break;
         default:
             printf("Unknown command: %s\n", $command);
@@ -51,6 +61,11 @@ function showProducts() {
         $product->setQty(15);
     }
     $store->persist();
+}
+
+function createProduct(string $name, int $qty) {
+    $store = initStore();
+    $store->addProduct($name, $qty);
 }
 
 run($argv);

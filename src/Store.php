@@ -72,7 +72,10 @@ class Store
      */
     public function addProduct(string $name, int $qty): Product
     {
-        throw new \Exception('Not implemented');
+        $product = new Product($name, $qty);
+        $this->db->addProduct($product);
+        $this->persist();
+        return $product;
     }
 
     /**
