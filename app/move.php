@@ -33,6 +33,14 @@ function run($args) {
             }
             createProduct($actualArgs[0], (int) $actualArgs[1]);
             break;
+        case 'moveProduct':
+            if (count($actualArgs) != 2) {
+                printf("Usage: product_name target_category\n");
+                return;
+            }
+            moveProduct($actualArgs[0], $actualArgs[1]);
+            showProducts();
+            break;
         default:
             printf("Unknown command: %s\n", $command);
     }
@@ -58,14 +66,17 @@ function showProducts() {
     foreach ($store->getProducts() as $product) {
         $catName = ($product->getCategory()) ? $product->getCategory()->getName() : 'No category';
         printTableRow($tablePad, [$product->getName(), $catName, $product->getQty()]);
-        $product->setQty(15);
     }
-    $store->persist();
 }
 
 function createProduct(string $name, int $qty) {
     $store = initStore();
     $store->addProduct($name, $qty);
+}
+
+function moveProduct(string $productName, string $targetCategory) {
+    $store = initStore();
+    $store->move($productName, $targetCategory);
 }
 
 run($argv);

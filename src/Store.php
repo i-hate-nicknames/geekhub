@@ -22,7 +22,7 @@ class Store
      */
     public function getCategories(): array
     {
-        throw new \Exception('Not implemented');
+        return $this->db->getCategories();
     }
 
     /**
@@ -32,7 +32,25 @@ class Store
      */
     public function getCategory(int $categoryId): Category
     {
-        throw new \Exception('Not implemented');
+        $cat = $this->db->getCategory($categoryId);
+        if ($cat === null) {
+            throw new \Exception("Category with id $categoryId not found!");
+        }
+        return $cat;
+    }
+
+    /**
+     * @param string $categoryName
+     * @return Category
+     * @throws \Exception
+     */
+    public function getCategoryByName(string $categoryName): Category
+    {
+        $cat = $this->db->getCategoryByName($categoryName);
+        if ($cat === null) {
+            throw new \Exception("Category with name $categoryName not found!");
+        }
+        return $cat;
     }
 
     /**
@@ -42,7 +60,11 @@ class Store
      */
     public function getProduct(string $productId): Product
     {
-        throw new \Exception('Not implemented');
+        $product = $this->db->getProduct($productId);
+        if ($product === null) {
+            throw new \Exception("Product $productId not found!");
+        }
+        return $product;
     }
 
     /**
@@ -55,20 +77,23 @@ class Store
     }
 
     /**
-     * @param Product $product
-     * @param Category $from
-     * @param Category $to
-     * @throws \Exception
+     * Move product identified by $productName to $targetCategory
+     * @param string $productName
+     * @param string $targetCategory
+     * @throws \Exception if either product or category do not exist
      */
-    public function move(Product $product, Category $from, Category $to)
+    public function move(string $productName, string $targetCategory)
     {
-        throw new \Exception('Not implemented');
+        $product = $this->getProduct($productName);
+        $product->setCategory($this->getCategoryByName($targetCategory));
+        $this->persist();
     }
 
     /**
      * @param string $name
      * @param int $qty
      * @return Product
+     * @throws \Exception
      */
     public function addProduct(string $name, int $qty): Product
     {

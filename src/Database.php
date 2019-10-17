@@ -71,6 +71,7 @@ class Database
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getCategories(): array
     {
@@ -80,11 +81,43 @@ class Database
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getProducts(): array
     {
         $this->load();
         return $this->products;
+    }
+
+    /**
+     * @param string $productId
+     * @return Product|null
+     * @throws \Exception when failed to load db
+     */
+    public function getProduct(string $productId): ?Product
+    {
+        return $this->getProducts()[$productId];
+    }
+
+    /**
+     * @param int $id
+     * @return Category|null
+     * @throws \Exception
+     */
+    public function getCategory(int $id): ?Category
+    {
+        return $this->getCategories()[$id];
+    }
+
+    /**
+     * Add given product to the database
+     * @param Product $product
+     * @throws \Exception
+     */
+    public function addProduct(Product $product)
+    {
+        $this->load();
+        $this->products[$product->getId()] = $product;
     }
 
     private function serializeProduct(Product $product): array
@@ -99,17 +132,28 @@ class Database
         return $result;
     }
 
-    public function addProduct(Product $product)
-    {
-        $this->load();
-        $this->products[$product->getId()] = $product;
-    }
-
     private function serializeCategory(Category $category): array
     {
         return [
             'name' => $category->getName(),
             'id' => (int) $category->getId(),
         ];
+    }
+
+    /**
+     * @param string $categoryName
+     * @return Category|null
+     * @throws \Exception
+     */
+    public function getCategoryByName(string $categoryName): ?Category
+    {
+        $this->load();
+        /** @var Category $cat */
+        foreach ($this->categories as $cat) {
+            if ($cat->getName() === $categoryName) {
+                return $cat;
+            }
+        }
+        return null;
     }
 }
