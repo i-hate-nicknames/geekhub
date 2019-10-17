@@ -79,13 +79,15 @@ class Store
     /**
      * Move product identified by $productName to $targetCategory
      * @param string $productName
-     * @param string $targetCategory
+     * @param string $targetCategoryName
      * @throws \Exception if either product or category do not exist
      */
-    public function move(string $productName, string $targetCategory)
+    public function move(string $productName, string $targetCategoryName)
     {
         $product = $this->getProduct($productName);
-        $product->setCategory($this->getCategoryByName($targetCategory));
+        $targetCategory = $this->getCategoryByName($targetCategoryName);
+        $product->setCategory($targetCategory);
+        $targetCategory->addProduct($product);
         $this->persist();
     }
 

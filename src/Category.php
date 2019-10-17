@@ -76,7 +76,7 @@ class Category
      * @param Product $product
      * @return bool
      */
-    private function hasProduct(Product $product): bool
+    public function hasProduct(Product $product): bool
     {
         foreach ($this->products as $existingProduct) {
             if ($existingProduct->equals($product)) {

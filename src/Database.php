@@ -47,6 +47,7 @@ class Database
                         $product->getName(), $catId));
                 }
                 $product->setCategory($cat);
+                $cat->addProduct($product);
             }
         }
         $this->loaded = true;
