@@ -28,11 +28,26 @@ function run($args) {
     }
 }
 
+/**
+ * Print a single table row to stdout, padding each element in $elements
+ * by $padLength and joining them via ` | `
+ * @param $padLength
+ * @param $elements
+ */
+function printTableRow($padLength, $elements) {
+    $padded = array_map(function ($el) use ($padLength) { return str_pad($el, $padLength);}, $elements);
+    $row = implode(' | ', $padded) . "\n";
+    printf($row);
+}
+
 function showProducts() {
     $store = initStore();
+    $tablePad = 12;
+    printTableRow($tablePad, ['Name', 'Category', 'Quantity']);
     /** @var Product $product */
     foreach ($store->getProducts() as $product) {
-        printf("%s\t|%s\t|%s", $product->getName(), $product->getCategory(), $product->getQty());
+        $catName = ($product->getCategory()) ? $product->getCategory()->getName() : 'No category';
+        printTableRow($tablePad, [$product->getName(), $catName, $product->getQty()]);
     }
 }
 
