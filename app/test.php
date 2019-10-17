@@ -48,7 +48,9 @@ function showProducts() {
     foreach ($store->getProducts() as $product) {
         $catName = ($product->getCategory()) ? $product->getCategory()->getName() : 'No category';
         printTableRow($tablePad, [$product->getName(), $catName, $product->getQty()]);
+        $product->setQty(15);
     }
+    $store->persist();
 }
 
 run($argv);

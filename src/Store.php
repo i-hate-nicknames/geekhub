@@ -74,4 +74,13 @@ class Store
     {
         throw new \Exception('Not implemented');
     }
+
+    /**
+     * Save current state of the store to the disk.
+     * This method should be called after editing product
+     */
+    public function persist()
+    {
+        $this->db->save();
+    }
 }

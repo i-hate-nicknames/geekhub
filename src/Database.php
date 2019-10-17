@@ -54,7 +54,19 @@ class Database
 
     public function save()
     {
-
+        $cats = [];
+        $products = [];
+        foreach ($this->products as $product) {
+            $products[] = $this->serializeProduct($product);
+        }
+        foreach ($this->categories as $cat) {
+            $cats[] = $this->serializeCategory($cat);
+        }
+        $db = [
+            'products' => $products,
+            'categories' => $cats
+        ];
+        file_put_contents($this->dbFile, json_encode($db));
     }
 
     /**
@@ -73,5 +85,25 @@ class Database
     {
         $this->load();
         return $this->products;
+    }
+
+    private function serializeProduct(Product $product): array
+    {
+        $result = [
+            'name' => $product->getName(),
+            'qty' => (int) $product->getQty()
+        ];
+        if ($product->getCategory() !== null) {
+            $result['category'] = (int) $product->getCategory()->getId();
+        }
+        return $result;
+    }
+
+    private function serializeCategory(Category $category): array
+    {
+        return [
+            'name' => $category->getName(),
+            'id' => (int) $category->getId(),
+        ];
     }
 }
