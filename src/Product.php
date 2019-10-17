@@ -14,6 +14,17 @@ class Product
     private $category;
 
     /**
+     * Product constructor.
+     * @param string $name
+     * @param int $qty
+     */
+    public function __construct(string $name, int $qty)
+    {
+        $this->name = $name;
+        $this->qty = $qty;
+    }
+
+    /**
      * @param Product $other
      * @return bool true if this is the same product as $other
      */

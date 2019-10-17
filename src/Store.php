@@ -51,7 +51,7 @@ class Store
      */
     public function getProducts(): array
     {
-        throw new \Exception('Not implemented');
+        return $this->db->getProducts();
     }
 
     /**
