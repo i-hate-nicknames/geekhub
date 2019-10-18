@@ -47,7 +47,7 @@ class ConsoleApp
         try {
             $this->run($command, $args);
         } catch (\Exception $e) {
-            printf($e->getMessage() . "\n");
+            $this->println($e->getMessage());
         }
     }
 
@@ -67,21 +67,21 @@ class ConsoleApp
                 break;
             case 'createProduct':
                 if (count($actualArgs) != 3) {
-                    printf("Please provide name, quantity and price for new product\n");
+                    $this->println('Please provide name, quantity and price for new product');
                     return;
                 }
                 $this->store->createProduct($actualArgs[0], $actualArgs[1], $actualArgs[2]);
                 break;
             case 'moveProduct':
                 if (count($actualArgs) != 2) {
-                    printf("Usage: product_name target_category\n");
+                    $this->println('Usage: product_name target_category');
                     return;
                 }
                 $this->store->move($actualArgs[0], $actualArgs[1]);
                 $this->showProducts();
                 break;
             default:
-                printf("Unknown command: %s\n", $command);
+                $this->println('Unknown command: %s', $command);
         }
     }
 
@@ -94,8 +94,8 @@ class ConsoleApp
     private function printTableRow($padLength, $elements)
     {
         $padded = array_map(function ($el) use ($padLength) { return str_pad($el, $padLength);}, $elements);
-        $row = implode(' | ', $padded) . "\n";
-        printf($row);
+        $row = implode(' | ', $padded);
+        $this->println($row);
     }
 
     /**
@@ -110,5 +110,15 @@ class ConsoleApp
                 $this->printTableRow(self::TABLE_PAD, [$catName, $product->getName(), $price, $product->getQty()]);
             }
         }
+    }
+
+    /**
+     * Perform printf to format string and arguments, but append a newline symbol to $formatString
+     * @param $formatString
+     * @param array $args
+     */
+    private function println($formatString, ...$args)
+    {
+        printf($formatString . "\n", ...$args);
     }
 }
