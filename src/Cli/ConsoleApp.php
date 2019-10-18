@@ -37,9 +37,9 @@ class ConsoleApp
      * <product name> <product quantity> <category name>
      * @param $args
      */
-    public function addProduct($args)
+    public function createProduct($args)
     {
-        $this->runSafe('addProduct', $args);
+        $this->runSafe('createProduct', $args);
     }
 
     private function runSafe($command, $args)
@@ -60,16 +60,17 @@ class ConsoleApp
     {
         // strip off first argument, the name of the program invoked
         $actualArgs = array_slice($args, 1);
+        // TODO: validating arguments (their number and types) would be nice
         switch ($command) {
             case 'showProducts':
                 $this->showProducts();
                 break;
             case 'createProduct':
-                if (count($actualArgs) != 2) {
-                    printf("Please provide name and quantity for new product\n");
+                if (count($actualArgs) != 3) {
+                    printf("Please provide name, quantity and price for new product\n");
                     return;
                 }
-                $this->store->addProduct($actualArgs[0], (int) $actualArgs[1]);
+                $this->store->createProduct($actualArgs[0], $actualArgs[1], $actualArgs[2]);
                 break;
             case 'moveProduct':
                 if (count($actualArgs) != 2) {
