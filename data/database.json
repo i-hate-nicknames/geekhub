@@ -46,6 +46,35 @@
       "name": "e",
       "qty": 1,
       "price": 0.99
+    },
+    {
+      "name": "f",
+      "qty": 5,
+      "category": 1,
+      "price": 1.2
+    },
+    {
+      "name": "g",
+      "qty": 0,
+      "category": 1,
+      "price": 5.0
+    },
+    {
+      "name": "h",
+      "qty": 5,
+      "category": 2,
+      "price": 1.5
+    },
+    {
+      "name": "i",
+      "qty": 3,
+      "category": 3,
+      "price": 3.2
+    },
+    {
+      "name": "j",
+      "qty": 1,
+      "price": 0.99
     }
   ]
 }
