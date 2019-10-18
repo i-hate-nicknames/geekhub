@@ -4,6 +4,8 @@ namespace GeekhubShop\Store;
 
 class Store
 {
+    public const NO_CATEGORY = 'None';
+
     /** @var Database */
     private $db;
 
@@ -71,9 +73,28 @@ class Store
      * @return array
      * @throws \Exception
      */
-    public function getProducts(): array
+    public function getAllProducts(): array
     {
         return $this->db->getProducts();
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getProductsGroupedByCategory(): array
+    {
+        $grouped = [];
+        /** @var Product $product */
+        foreach ($this->getAllProducts() as $product) {
+            $cat = $product->getCategory();
+            $catName = ($cat !== null) ? $cat->getName() : self::NO_CATEGORY;
+            if (!array_key_exists($catName, $grouped)) {
+                $grouped[$catName] = [];
+            }
+            $grouped[$catName][] = $product;
+        }
+        return $grouped;
     }
 
     /**
@@ -84,6 +105,9 @@ class Store
      */
     public function move(string $productName, string $targetCategoryName)
     {
+        if (strtolower($targetCategoryName) === strtolower(self::NO_CATEGORY)) {
+            throw new \Exception('Removing products from categories is not allowed');
+        }
         $product = $this->getProduct($productName);
         $targetCategory = $this->getCategoryByName($targetCategoryName);
         $product->setCategory($targetCategory);
@@ -94,12 +118,13 @@ class Store
     /**
      * @param string $name
      * @param int $qty
+     * @param float $price
      * @return Product
      * @throws \Exception
      */
-    public function addProduct(string $name, int $qty): Product
+    public function createProduct(string $name, int $qty, float $price): Product
     {
-        $product = new Product($name, $qty);
+        $product = new Product($name, $qty, $price);
         $this->db->addProduct($product);
         $this->persist();
         return $product;

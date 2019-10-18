@@ -102,14 +102,10 @@ class ConsoleApp
      */
     private function showProducts() {
         $this->printTableRow(self::TABLE_PAD, ['Category', 'Name', 'Price', 'Quantity']);
-        /** @var Category $cat */
-        foreach ($this->store->getCategories() as $cat) {
+        foreach ($this->store->getProductsGroupedByCategory() as $catName => $products) {
             /** @var Product $product */
-            foreach ($cat->getProducts() as $product) {
-                $this->printTableRow(
-                    self::TABLE_PAD,
-                    [$cat->getName(), $product->getName(), $product->getPrice(), $product->getQty()]
-                );
+            foreach ($products as $product) {
+                $this->printTableRow(self::TABLE_PAD, [$catName, $product->getName(), $product->getPrice(), $product->getQty()]);
             }
         }
     }
