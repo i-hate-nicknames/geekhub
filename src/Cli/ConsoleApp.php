@@ -93,7 +93,10 @@ class ConsoleApp
      */
     private function printTableRow($padLength, $elements)
     {
-        $padded = array_map(function ($el) use ($padLength) { return str_pad($el, $padLength);}, $elements);
+        $padded = array_map(function ($el) use ($padLength) {
+            return str_pad($el, $padLength);
+        },
+            $elements);
         $row = implode(' | ', $padded);
         $this->println($row);
     }
@@ -101,7 +104,8 @@ class ConsoleApp
     /**
      * @throws \Exception
      */
-    private function showProducts() {
+    private function showProducts()
+    {
         $this->printTableRow(self::TABLE_PAD, ['Category', 'Name', 'Price', 'Quantity']);
         foreach ($this->store->getProductsGroupedByCategory() as $catName => $products) {
             /** @var Product $product */
