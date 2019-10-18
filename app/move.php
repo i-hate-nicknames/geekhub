@@ -1,9 +1,9 @@
 <?php
 
-use GeekhubShop\Category;
-use GeekhubShop\Database;
-use GeekhubShop\Product;
-use GeekhubShop\Store;
+use GeekhubShop\Store\Category;
+use GeekhubShop\Store\Database;
+use GeekhubShop\Store\Product;
+use GeekhubShop\Store\Store;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

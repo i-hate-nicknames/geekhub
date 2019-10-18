@@ -1,6 +1,6 @@
 <?php
 
-namespace GeekhubShop;
+namespace GeekhubShop\Store;
 
 class Store
 {
@@ -106,7 +106,7 @@ class Store
     }
 
     /**
-     * Save current state of the store to the disk.
+     * Save current state of the Store to the disk.
      * This method should be called after editing product
      */
     public function persist()
