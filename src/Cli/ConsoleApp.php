@@ -21,11 +21,22 @@ class ConsoleApp
         $this->store = new Store(new Database(self::DB_FILE));
     }
 
+    /**
+     * Move product to given category. Expect arguments in form
+     * <product name> <category name>
+     * @param $args
+     */
     public function moveProduct($args)
     {
         $this->runSafe('moveProduct', $args);
     }
 
+    /**
+     * Add new product to the store
+     * Expect arguments in form
+     * <product name> <product quantity> <category name>
+     * @param $args
+     */
     public function addProduct($args)
     {
         $this->runSafe('addProduct', $args);

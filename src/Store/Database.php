@@ -19,6 +19,11 @@ class Database
         $this->dbFile = $dbFile;
     }
 
+    /**
+     * Load db from db file. This method should be called before any database interaction.
+     * Load is performed only once even if the method is called multiple times.
+     * @throws \Exception
+     */
     public function load()
     {
         if ($this->loaded) {
@@ -53,6 +58,9 @@ class Database
         $this->loaded = true;
     }
 
+    /**
+     * Saves current state of the database to db file
+     */
     public function save()
     {
         $cats = [];
