@@ -105,7 +105,10 @@ class Database
      */
     public function getProduct(string $productId): ?Product
     {
-        return $this->getProducts()[$productId];
+        if (array_key_exists($productId, $this->getProducts())) {
+            return $this->getProducts()[$productId];
+        }
+        return null;
     }
 
     /**
@@ -115,7 +118,10 @@ class Database
      */
     public function getCategory(int $id): ?Category
     {
-        return $this->getCategories()[$id];
+        if (array_key_exists($id, $this->getCategories())) {
+            return $this->getCategories()[$id];
+        }
+        return null;
     }
 
     /**
