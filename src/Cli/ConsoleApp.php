@@ -106,7 +106,8 @@ class ConsoleApp
         foreach ($this->store->getProductsGroupedByCategory() as $catName => $products) {
             /** @var Product $product */
             foreach ($products as $product) {
-                $this->printTableRow(self::TABLE_PAD, [$catName, $product->getName(), $product->getPrice(), $product->getQty()]);
+                $price = sprintf("%.2f", $product->getPrice());
+                $this->printTableRow(self::TABLE_PAD, [$catName, $product->getName(), $price, $product->getQty()]);
             }
         }
     }
