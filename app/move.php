@@ -1,5 +1,6 @@
 <?php
 
+use GeekhubShop\Category;
 use GeekhubShop\Database;
 use GeekhubShop\Product;
 use GeekhubShop\Store;
@@ -61,11 +62,13 @@ function printTableRow($padLength, $elements) {
 function showProducts() {
     $store = initStore();
     $tablePad = 12;
-    printTableRow($tablePad, ['Name', 'Category', 'Quantity']);
-    /** @var Product $product */
-    foreach ($store->getProducts() as $product) {
-        $catName = ($product->getCategory()) ? $product->getCategory()->getName() : 'No category';
-        printTableRow($tablePad, [$product->getName(), $catName, $product->getQty()]);
+    printTableRow($tablePad, ['Category', 'Name', 'Quantity']);
+    /** @var Category $cat */
+    foreach ($store->getCategories() as $cat) {
+        /** @var Product $product */
+        foreach ($cat->getProducts() as $product) {
+            printTableRow($tablePad, [$cat->getName(), $product->getName(), $product->getQty()]);
+        }
     }
 }
 
