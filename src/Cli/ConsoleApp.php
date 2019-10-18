@@ -101,12 +101,15 @@ class ConsoleApp
      * @throws \Exception
      */
     private function showProducts() {
-        $this->printTableRow(self::TABLE_PAD, ['Category', 'Name', 'Quantity']);
+        $this->printTableRow(self::TABLE_PAD, ['Category', 'Name', 'Price', 'Quantity']);
         /** @var Category $cat */
         foreach ($this->store->getCategories() as $cat) {
             /** @var Product $product */
             foreach ($cat->getProducts() as $product) {
-                $this->printTableRow(self::TABLE_PAD, [$cat->getName(), $product->getName(), $product->getQty()]);
+                $this->printTableRow(
+                    self::TABLE_PAD,
+                    [$cat->getName(), $product->getName(), $product->getPrice(), $product->getQty()]
+                );
             }
         }
     }

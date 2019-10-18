@@ -42,7 +42,7 @@ class Database
             $this->categories[$cat->getId()] = $cat;
         }
         foreach ($db['products'] as $productDefinition) {
-            $product = new Product($productDefinition['name'], $productDefinition['qty']);
+            $product = new Product($productDefinition['name'], $productDefinition['qty'], $productDefinition['price']);
             $this->products[$product->getId()] = $product;
             if (array_key_exists('category', $productDefinition)) {
                 $catId = $productDefinition['category'];
@@ -133,7 +133,8 @@ class Database
     {
         $result = [
             'name' => $product->getName(),
-            'qty' => (int) $product->getQty()
+            'qty' => (int) $product->getQty(),
+            'price' => (float) $product->getPrice()
         ];
         if ($product->getCategory() !== null) {
             $result['category'] = (int) $product->getCategory()->getId();

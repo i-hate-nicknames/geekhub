@@ -13,15 +13,20 @@ class Product
     /** @var Category */
     private $category;
 
+    /** @var float */
+    private $price;
+
     /**
      * Product constructor.
      * @param string $name
      * @param int $qty
+     * @param float $price
      */
-    public function __construct(string $name, int $qty)
+    public function __construct(string $name, int $qty, float $price)
     {
         $this->name = $name;
         $this->qty = $qty;
+        $this->price = $price;
     }
 
     /**
@@ -84,5 +89,21 @@ class Product
     public function setCategory(Category $category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price): void
+    {
+        $this->price = $price;
     }
 }
