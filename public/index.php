@@ -4,5 +4,5 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
-echo '<h1>store will be here some day</h1>';
+$app = new \GeekhubShop\App();
+$app->run();
