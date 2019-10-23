@@ -2,12 +2,16 @@
 
 namespace GeekhubShop\Controllers;
 
+use GeekhubShop\Views\BaseView;
+
 abstract class BaseController
 {
     abstract public function run();
 
-    public function error($httpStatus, $text, $template=null)
+    public function error($responseCode, $errorText, $template=null)
     {
-        echo "Error $httpStatus: $text";
+        http_response_code($responseCode);
+        $view = new BaseView();
+        $view->renderTemplate(['responseCode' => $responseCode, 'errorText' => $errorText], 'error.php');
     }
 }
