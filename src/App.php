@@ -23,6 +23,6 @@ class App
     public function run()
     {
         $this->init();
-        $this->frontController->dispatch();
+        $this->frontController->run();
     }
 }
