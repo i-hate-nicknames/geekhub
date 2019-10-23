@@ -6,6 +6,8 @@ use GeekhubShop\Controllers\FrontController;
 
 class App
 {
+    public const TEMPLATES_DIR = __DIR__ . '/templates/';
+
     /** @var FrontController */
     private $frontController;
 

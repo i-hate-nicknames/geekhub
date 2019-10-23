@@ -2,6 +2,8 @@
 
 namespace GeekhubShop\Controllers;
 
+use GeekhubShop\Views\BaseView;
+
 class FrontController
 {
     /**
@@ -11,6 +13,8 @@ class FrontController
      */
     public function dispatch()
     {
+        $view = new BaseView();
+        $view->renderTemplate(['items' => [1, 2, 3]], 'main.php');
         echo 'Actual controller output be here';
     }
 }
