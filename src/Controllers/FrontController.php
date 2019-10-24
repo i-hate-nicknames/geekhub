@@ -20,10 +20,17 @@ class FrontController extends BaseController
 
     public function run()
     {
+        // todo: handle errors gracefully in one place
         $controller = $this->getPageController();
-        if ($controller !== null) {
-            $controller->run();
+        if ($controller === null) {
+            return;
         }
+        $action = strtolower($this->getAction());
+        $methodName = $action . "Action";
+        if (!method_exists($controller, $methodName)) {
+            throw new \Exception("Action $action doesn't exist in " . get_class($controller));
+        }
+        $controller->$methodName();
     }
 
     /**
@@ -34,7 +41,7 @@ class FrontController extends BaseController
     private function getPageController(): ?BaseController
     {
         // todo: just switch to a good request parser library in future tbh
-        $page = self::DEFAULT_PAGE;
+        $page = $this->getRequestValue('page', self::DEFAULT_PAGE);
         if (array_key_exists('page', $_REQUEST)) {
             $page = $_REQUEST['page'];
         }
@@ -44,5 +51,10 @@ class FrontController extends BaseController
         }
         $class = self::CONTROLLERS[$page];
         return new $class;
+    }
+
+    private function getAction(): string
+    {
+        return $this->getRequestValue('action', 'index');
     }
 }

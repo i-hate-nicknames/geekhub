@@ -9,7 +9,7 @@ use GeekhubShop\Views\BaseView;
 
 class StoreController extends BaseController
 {
-    public function run()
+    public function indexAction()
     {
         $db = new Database(App::DB_FILE);
         $store = new Store($db);
