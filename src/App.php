@@ -8,6 +8,8 @@ class App
 {
     public const TEMPLATES_DIR = __DIR__ . '/templates/';
 
+    public const DB_FILE = __DIR__ . '/../data/database.json';
+
     /** @var FrontController */
     private $frontController;
 
