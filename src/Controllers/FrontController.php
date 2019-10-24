@@ -6,6 +6,8 @@ use GeekhubShop\Views\BaseView;
 
 class FrontController extends BaseController
 {
+    private const DEFAULT_PAGE = 'store';
+
     private const CONTROLLERS = [
         'store' => StoreController::class
     ];
@@ -32,7 +34,10 @@ class FrontController extends BaseController
     private function getPageController(): ?BaseController
     {
         // todo: just switch to a good request parser library in future tbh
-        $page = @$_REQUEST['page'];
+        $page = self::DEFAULT_PAGE;
+        if (array_key_exists('page', $_REQUEST)) {
+            $page = $_REQUEST['page'];
+        }
         if (!array_key_exists($page, self::CONTROLLERS)) {
             $this->error(404, 'Page not found');
             return null;
