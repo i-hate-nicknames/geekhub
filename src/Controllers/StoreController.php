@@ -19,20 +19,30 @@ class StoreController extends BaseController
     public function createProductAction()
     {
         $productName = $this->getRequestStringParam('name', '');
-        $price = $this->getRequestFloatParam('name', 0.0);
-        $qty = $this->getRequestIntParam('name', 0);
+        $price = $this->getRequestFloatParam('price', 0.0);
+        $qty = $this->getRequestIntParam('qty', 0);
         if ($productName === '') {
             throw new \Exception('Product name is empty');
         }
         $store = $this->getStore();
         $store->createProduct($productName, $qty, $price);
-        // TODO: implement redirect
-        echo 'success';
+        // TODO: redirect with success message
+        echo "Create product $productName, price $price qty $qty";
     }
 
     public function moveProductAction()
     {
-
+        $productName = $this->getRequestStringParam('productName', '');
+        $targetCat = $this->getRequestStringParam('targetCategory', '');
+        if ($productName === '') {
+            throw new \Exception('Product name is empty');
+        }
+        if ($targetCat === '') {
+            throw new \Exception('Category name is empty');
+        }
+        $this->getStore()->move($productName, $targetCat);
+        // TODO: redirect with success message
+        echo "Moved product $productName to $targetCat";
     }
 
     private function getStore()
