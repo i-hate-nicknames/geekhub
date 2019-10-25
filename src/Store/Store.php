@@ -56,11 +56,11 @@ class Store
     }
 
     /**
-     * @param string $productId
+     * @param int $productId
      * @return Product
      * @throws \Exception
      */
-    public function getProduct(string $productId): Product
+    public function getProduct(int $productId): Product
     {
         $product = $this->db->getProduct($productId);
         if ($product === null) {
@@ -124,7 +124,7 @@ class Store
      */
     public function createProduct(string $name, int $qty, float $price): Product
     {
-        $product = new Product($name, $qty, $price);
+        $product = new Product(null, $name, $qty, $price);
         $this->db->addProduct($product);
         $this->persist();
         return $product;

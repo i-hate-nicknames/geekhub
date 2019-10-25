@@ -17,16 +17,23 @@ class Product
     private $price;
 
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * Product constructor.
+     * @param int $id
      * @param string $name
      * @param int $qty
      * @param float $price
      */
-    public function __construct(string $name, int $qty, float $price)
+    public function __construct(?int $id, string $name, int $qty, float $price)
     {
         $this->name = $name;
         $this->qty = $qty;
         $this->price = $price;
+        $this->id = $id;
     }
 
     /**
@@ -35,18 +42,29 @@ class Product
      */
     public function equals(Product $other): bool
     {
-        return $this->getName() === $other->getName();
+        return $this->getId() === $other->getName();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
     }
 
     /**
      * @return string
      */
     public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getId()
     {
         return $this->name;
     }

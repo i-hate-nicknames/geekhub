@@ -1,1 +1,91 @@
-{"products":[{"name":"a","qty":5,"price":1.2,"category":1},{"name":"b","qty":0,"price":5,"category":1},{"name":"c","qty":5,"price":1.5,"category":2},{"name":"d","qty":3,"price":3.2,"category":3},{"name":"e","qty":1,"price":0.99,"category":4},{"name":"f","qty":5,"price":1.2,"category":4},{"name":"g","qty":0,"price":5,"category":1},{"name":"h","qty":5,"price":1.5,"category":2},{"name":"i","qty":3,"price":3.2,"category":3},{"name":"j","qty":1,"price":0.99}],"categories":[{"name":"I","id":1},{"name":"II","id":2},{"name":"III","id":3},{"name":"IV","id":4}]}
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "a",
+      "qty": 5,
+      "price": 1.2,
+      "category": 1
+    },
+    {
+      "id": 2,
+      "name": "b",
+      "qty": 0,
+      "price": 5,
+      "category": 1
+    },
+    {
+      "id": 3,
+      "name": "c",
+      "qty": 5,
+      "price": 1.5,
+      "category": 2
+    },
+    {
+      "id": 4,
+      "name": "e",
+      "qty": 1,
+      "price": 0.99,
+      "category": 4
+    },
+    {
+      "id": 5,
+      "name": "f",
+      "qty": 5,
+      "price": 1.2,
+      "category": 4
+    },
+    {
+      "id": 6,
+      "name": "g",
+      "qty": 0,
+      "price": 5,
+      "category": 1
+    },
+    {
+      "id": 7,
+      "name": "h",
+      "qty": 5,
+      "price": 1.5,
+      "category": 2
+    },
+    {
+      "id": 8,
+      "name": "i",
+      "qty": 3,
+      "price": 3.2,
+      "category": 3
+    },
+    {
+      "id": 9,
+      "name": "j",
+      "qty": 1,
+      "price": 0.99
+    },
+    {
+      "id": 10,
+      "name": "smth",
+      "qty": 0,
+      "price": 0,
+      "category": 4
+    }
+  ],
+  "categories": [
+    {
+      "name": "I",
+      "id": 1
+    },
+    {
+      "name": "II",
+      "id": 2
+    },
+    {
+      "name": "III",
+      "id": 3
+    },
+    {
+      "name": "IV",
+      "id": 4
+    }
+  ]
+}

@@ -32,17 +32,17 @@ class StoreController extends BaseController
 
     public function moveProductAction()
     {
-        $productName = $this->getRequestStringParam('productName', '');
+        $productId = $this->getRequestStringParam('productId', '');
         $targetCat = $this->getRequestStringParam('targetCategory', '');
-        if ($productName === '') {
-            throw new \Exception('Product name is empty');
+        if ($productId === '') {
+            throw new \Exception('Product id is empty');
         }
         if ($targetCat === '') {
             throw new \Exception('Category name is empty');
         }
-        $this->getStore()->move($productName, $targetCat);
+        $this->getStore()->move($productId, $targetCat);
         // TODO: redirect with success message
-        echo "Moved product $productName to $targetCat";
+        echo "Moved product $productId to $targetCat";
     }
 
     private function getStore()

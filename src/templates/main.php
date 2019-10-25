@@ -19,11 +19,16 @@
 <body>
 <h1>Welcome to this store</h1>
 <table>
-    <tr><th>Category name</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>
+    <tr><th>Category name</th><th>Product id</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>
     <?php foreach ($data['productsGrouped'] as $categoryName => $products): ?>
     <tr><td rowspan="<?= count($products)+1?>"><?= $categoryName ?></td></tr>
     <?php foreach ($products as $product): ?>
-        <tr><td><?= $product->getName() ?></td><td><?= $product->getPrice() ?></td><td><?= $product->getQty() ?></td></tr>
+        <tr>
+            <td><?= $product->getId() ?></td>
+            <td><?= $product->getName() ?></td>
+            <td><?= $product->getPrice() ?></td>
+            <td><?= $product->getQty() ?></td>
+        </tr>
     <?php endforeach; ?>
     <?php endforeach; ?>
 </table>

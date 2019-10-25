@@ -14,6 +14,8 @@ class Database
 
     private $loaded;
 
+    private static $lastProductId = 0;
+
     public function __construct(string $dbFile)
     {
         $this->dbFile = $dbFile;
@@ -42,8 +44,14 @@ class Database
             $this->categories[$cat->getId()] = $cat;
         }
         foreach ($db['products'] as $productDefinition) {
-            $product = new Product($productDefinition['name'], $productDefinition['qty'], $productDefinition['price']);
+            $product = new Product(
+                $productDefinition['id'],
+                $productDefinition['name'],
+                $productDefinition['qty'],
+                $productDefinition['price']
+            );
             $this->products[$product->getId()] = $product;
+            self::$lastProductId = max(self::$lastProductId, $product->getId());
             if (array_key_exists('category', $productDefinition)) {
                 $catId = $productDefinition['category'];
                 $cat = $this->categories[$catId];
@@ -99,11 +107,11 @@ class Database
     }
 
     /**
-     * @param string $productId
+     * @param int $productId
      * @return Product|null
      * @throws \Exception when failed to load db
      */
-    public function getProduct(string $productId): ?Product
+    public function getProduct(int $productId): ?Product
     {
         if (array_key_exists($productId, $this->getProducts())) {
             return $this->getProducts()[$productId];
@@ -132,12 +140,17 @@ class Database
     public function addProduct(Product $product)
     {
         $this->load();
+        if ($product->getId() === null) {
+            self::$lastProductId++;
+            $product->setId(self::$lastProductId);
+        }
         $this->products[$product->getId()] = $product;
     }
 
     private function serializeProduct(Product $product): array
     {
         $result = [
+            'id' => $product->getId(),
             'name' => $product->getName(),
             'qty' => (int) $product->getQty(),
             'price' => (float) $product->getPrice()
