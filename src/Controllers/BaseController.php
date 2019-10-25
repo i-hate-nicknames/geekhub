@@ -13,12 +13,27 @@ class BaseController
         $view->renderTemplate(['responseCode' => $responseCode, 'errorText' => $errorText], 'error.php');
     }
 
-    protected function getRequestValue(string $key, string $default): string
+    protected function getRequestStringParam(string $key, string $default): string
     {
-        $val = $default;
+        return $this->getRequestParam($key, $default, FILTER_SANITIZE_STRING);
+    }
+
+    protected function getRequestFloatParam(string $key, float $default): float
+    {
+        return $this->getRequestParam($key, $default, FILTER_VALIDATE_FLOAT);
+    }
+
+    protected function getRequestIntParam(string $key, int $default): int
+    {
+        return $this->getRequestParam($key, $default, FILTER_VALIDATE_INT);
+    }
+
+    private function getRequestParam(string $key, $default, $filter)
+    {
+        $val = false;
         if (array_key_exists($key, $_REQUEST)) {
-            $val = $_REQUEST[$key];
+            $val = filter_var($_REQUEST[$key], $filter);
         }
-        return $val;
+        return ($val !== false) ? $val : $default;
     }
 }

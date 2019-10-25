@@ -41,7 +41,7 @@ class FrontController extends BaseController
     private function getPageController(): ?BaseController
     {
         // todo: just switch to a good request parser library in future tbh
-        $page = $this->getRequestValue('page', self::DEFAULT_PAGE);
+        $page = $this->getRequestStringParam('page', self::DEFAULT_PAGE);
         if (array_key_exists('page', $_REQUEST)) {
             $page = $_REQUEST['page'];
         }
@@ -55,6 +55,6 @@ class FrontController extends BaseController
 
     private function getAction(): string
     {
-        return $this->getRequestValue('action', 'index');
+        return $this->getRequestStringParam('action', 'index');
     }
 }
