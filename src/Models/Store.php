@@ -1,6 +1,6 @@
 <?php
 
-namespace GeekhubShop\Store;
+namespace GeekhubShop\Models;
 
 class Store
 {

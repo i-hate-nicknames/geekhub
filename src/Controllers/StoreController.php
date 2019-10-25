@@ -3,8 +3,8 @@
 namespace GeekhubShop\Controllers;
 
 use GeekhubShop\App;
-use GeekhubShop\Store\Database;
-use GeekhubShop\Store\Store;
+use GeekhubShop\Models\Database;
+use GeekhubShop\Models\Store;
 use GeekhubShop\Views\BaseView;
 
 class StoreController extends BaseController
