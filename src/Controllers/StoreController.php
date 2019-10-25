@@ -26,6 +26,7 @@ class StoreController extends BaseController
         }
         $store = $this->getStore();
         $store->createProduct($productName, $qty, $price);
+        // TODO: implement redirect
         echo 'success';
     }
 
