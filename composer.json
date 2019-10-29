@@ -3,7 +3,9 @@
     "description": "smth",
     "type": "project",
     "license": "MIT",
-    "require": {},
+    "require": {
+        "symfony/http-foundation": "^4.3"
+    },
     "autoload": {
         "psr-4": {
             "GeekhubShop\\": "src/"
