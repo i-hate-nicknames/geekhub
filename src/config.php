@@ -8,7 +8,7 @@ use Symfony\Component\Routing\RouteCollection;
 $routes = new RouteCollection();
 $routes->add('hello', new Route('/hello/{name}', [
     'name' => 'kurwa',
-    '_controller' => [new HelloController(), 'index']
+    '_controller' => 'GeekhubShop\Controllers\HelloController::index'
 ]));
 $routes->add('bye', new Route('/bye'));
 
