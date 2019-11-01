@@ -8,8 +8,10 @@ use GeekhubShop\Models\Store;
 use GeekhubShop\Views\BaseView;
 use Symfony\Component\HttpFoundation\Response;
 
-class StoreController extends BaseController
+class StoreController
 {
+    public const DB_FILE = '/data/database.json';
+
     public function index()
     {
         $store = $this->getStore();
@@ -35,7 +37,7 @@ class StoreController extends BaseController
 
     private function getStore()
     {
-        $db = new Database(App::DB_FILE);
+        $db = new Database(self::DB_FILE);
         return new Store($db);
     }
 }

@@ -36,7 +36,6 @@ class Kernel implements HttpKernelInterface
         $this->argumentResolver = $argumentResolver;
     }
 
-
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
         $this->matcher->getContext()->fromRequest($request);
@@ -50,7 +49,7 @@ class Kernel implements HttpKernelInterface
         } catch (ResourceNotFoundException $exception) {
             $response = new Response('Not Found', 404);
         } catch (Exception $exception) {
-            $response = new Response('Internal server error', 500);
+            $response = new Response('Internal server error: ' . $exception->getMessage(), 500);
         }
         return $response;
     }
