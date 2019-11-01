@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -26,6 +27,7 @@ $matcher = new UrlMatcher($routes, $context);
 
 $dispatcher = new EventDispatcher();
 $dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
+$dispatcher->addSubscriber(new ExceptionListener('GeekhubShop\Controllers\ErrorController::exception'));
 
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
