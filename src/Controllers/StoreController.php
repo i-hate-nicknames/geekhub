@@ -6,48 +6,38 @@ use GeekhubShop\App;
 use GeekhubShop\Models\Database;
 use GeekhubShop\Models\Store;
 use GeekhubShop\Views\BaseView;
+use Symfony\Component\HttpFoundation\Response;
 
-class StoreController extends BaseController
+class StoreController
 {
-    public function indexAction()
+    public const DB_FILE = '/data/database.json';
+
+    public function index()
     {
         $store = $this->getStore();
         $view = new BaseView();
-        $view->renderTemplate(['productsGrouped' => $store->getProductsGroupedByCategory()], 'main.php');
+        $body = $view->renderTemplate(['productsGrouped' => $store->getProductsGroupedByCategory()], 'main.php');
+        return new Response($body);
     }
 
-    public function createProductAction()
+    public function createProduct($name, $price = 0.0, $qty = 0)
     {
-        $productName = $this->getRequestStringParam('name', '');
-        $price = $this->getRequestFloatParam('price', 0.0);
-        $qty = $this->getRequestIntParam('qty', 0);
-        if ($productName === '') {
-            throw new \Exception('Product name is empty');
-        }
         $store = $this->getStore();
-        $store->createProduct($productName, $qty, $price);
+        $store->createProduct($name, $qty, $price);
         // TODO: redirect with success message
-        echo "Create product $productName, price $price qty $qty";
+        return new Response("Successfully created product $name, price $price qty $qty");
     }
 
-    public function moveProductAction()
+    public function moveProduct($productId, $target)
     {
-        $productId = $this->getRequestStringParam('productId', '');
-        $targetCat = $this->getRequestStringParam('targetCategory', '');
-        if ($productId === '') {
-            throw new \Exception('Product id is empty');
-        }
-        if ($targetCat === '') {
-            throw new \Exception('Category name is empty');
-        }
-        $this->getStore()->move($productId, $targetCat);
+        $this->getStore()->move($productId, $target);
         // TODO: redirect with success message
-        echo "Moved product $productId to $targetCat";
+        return new Response("Moved product $productId to $target");
     }
 
     private function getStore()
     {
-        $db = new Database(App::DB_FILE);
+        $db = new Database(self::DB_FILE);
         return new Store($db);
     }
 }
