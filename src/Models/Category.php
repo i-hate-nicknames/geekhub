@@ -1,6 +1,6 @@
 <?php
 
-namespace GeekhubShop\Models;
+namespace App\Models;
 
 class Category
 {
