@@ -20,7 +20,7 @@ class StoreController extends AbstractController
     public function hello()
     {
         $store = $this->getStore();
-        return new JsonResponse($store->getProductsGroupedByCategory());
+        return $this->render('categories.html.twig', ['categories' => $store->getProductsGroupedByCategory()]);
     }
 
     private function getStore()

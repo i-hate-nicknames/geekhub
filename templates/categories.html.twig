@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    td, th {
+        border: 1px solid #333;
+        padding: 5px 10px;
+    }
+</style>
+<table>
+    <tr><th>Category name</th><th>Product id</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>
+    {% for categoryName, products in categories %}
+        <tr><td rowspan="{{ products|length + 1 }}">{{categoryName}}</td></tr>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.getId() }}</td>
+                <td>{{ product.getName() }}</td>
+                <td>{{ product.getPrice() }}</td>
+                <td>{{ product.getQty() }}</td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+</table>
+{% endblock %}
