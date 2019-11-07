@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
+
+use App\Entity\Category;
+use App\Entity\Product;
 
 class Store
 {
