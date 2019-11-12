@@ -27,7 +27,6 @@ class StoreController extends AbstractController
      */
     public function createProduct(Store $store, $name, $price = 0.0, $qty = 0)
     {
-        $store = $this->getStore();
         $store->createProduct($name, $qty, $price);
         return $this->redirect('/');
     }
@@ -41,8 +40,7 @@ class StoreController extends AbstractController
      */
     public function moveProduct(Store $store, $productId, $target)
     {
-        $store = $this->getStore();
-        $this->getStore()->move($productId, $target);
+        $store->move($productId, $target);
         return $this->redirect('/');
     }
 }
