@@ -28,7 +28,7 @@ class Product
      * @param int $qty
      * @param float $price
      */
-    public function __construct(?int $id, string $name, int $qty, float $price)
+    public function __construct(int $id, string $name, int $qty, float $price)
     {
         $this->name = $name;
         $this->qty = $qty;
@@ -48,7 +48,7 @@ class Product
     /**
      * @return int|null
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -96,7 +96,7 @@ class Product
     /**
      * @return Category
      */
-    public function getCategory()
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
@@ -104,7 +104,7 @@ class Product
     /**
      * @param Category $category
      */
-    public function setCategory(Category $category)
+    public function setCategory(?Category $category)
     {
         $this->category = $category;
     }

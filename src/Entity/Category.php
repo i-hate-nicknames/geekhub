@@ -72,19 +72,6 @@ class Category
         $this->products = $products;
     }
 
-    /**
-     * @param Product $product
-     * @return bool
-     */
-    public function hasProduct(Product $product): bool
-    {
-        foreach ($this->products as $existingProduct) {
-            if ($existingProduct->equals($product)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * @param Product $product
