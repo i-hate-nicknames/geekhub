@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_merge;
 use function sprintf;
@@ -14,14 +15,19 @@ class Store
 
     /** @var Database */
     private $db;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * Store constructor.
      * @param Database $db
      */
-    public function __construct(Database $db)
+    public function __construct(Database $db, LoggerInterface $logger)
     {
         $this->db = $db;
+        $this->logger = $logger;
     }
 
     /**
@@ -104,6 +110,22 @@ class Store
     }
 
     /**
+     * @param string $name
+     * @param int $qty
+     * @param float $price
+     * @return Product
+     * @throws \Exception
+     */
+    public function createProduct(string $name, int $qty, float $price): Product
+    {
+        $product = new Product(null, $name, $qty, $price);
+        $this->db->addProduct($product);
+        $this->persist();
+        $this->logger->info('Created new product, id = ' . $product->getId());
+        return $product;
+    }
+
+    /**
      * Move product identified by $productName to $targetCategory
      * @param string $productName
      * @param string $targetCategoryName
@@ -122,21 +144,13 @@ class Store
         }
         $this->addProductToCategory($targetCategory, $product);
         $this->persist();
-    }
-
-    /**
-     * @param string $name
-     * @param int $qty
-     * @param float $price
-     * @return Product
-     * @throws \Exception
-     */
-    public function createProduct(string $name, int $qty, float $price): Product
-    {
-        $product = new Product(null, $name, $qty, $price);
-        $this->db->addProduct($product);
-        $this->persist();
-        return $product;
+        $message = sprintf(
+            'Moved product %s from %s to %s',
+            $productName,
+            $oldCategory->getName(),
+            $targetCategoryName
+        );
+        $this->logger->info($message);
     }
 
     /**

@@ -23,12 +23,12 @@ class Product
 
     /**
      * Product constructor.
-     * @param int $id
+     * @param int|null $id
      * @param string $name
      * @param int $qty
      * @param float $price
      */
-    public function __construct(int $id, string $name, int $qty, float $price)
+    public function __construct(?int $id, string $name, int $qty, float $price)
     {
         $this->name = $name;
         $this->qty = $qty;
@@ -48,7 +48,7 @@ class Product
     /**
      * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
