@@ -28,3 +28,7 @@ services:
     App\Services\Database:
         arguments:
             $dbFile: '/data/database.json'
+
+    App\Services\Notifier:
+        arguments:
+            $mailAddress: '%env(NOTIFICATION_ADDRESS)%'
