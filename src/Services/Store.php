@@ -5,6 +5,10 @@ namespace App\Services;
 use App\Entity\Category;
 use App\Entity\Product;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Message;
+use Symfony\Component\Mime\Part\TextPart;
 use function array_filter;
 use function array_merge;
 use function sprintf;
@@ -19,15 +23,20 @@ class Store
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var Notifier
+     */
+    private $notifier;
 
     /**
      * Store constructor.
      * @param Database $db
      */
-    public function __construct(Database $db, LoggerInterface $logger)
+    public function __construct(Database $db, Notifier $notifier, LoggerInterface $logger)
     {
         $this->db = $db;
         $this->logger = $logger;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -121,7 +130,9 @@ class Store
         $product = new Product(null, $name, $qty, $price);
         $this->db->addProduct($product);
         $this->persist();
-        $this->logger->info('Created new product, id = ' . $product->getId());
+        $msg = 'Created new product, id = ' . $product->getId();
+        $this->logger->info($msg);
+        $this->notifier->notify($msg);
         return $product;
     }
 
