@@ -15,6 +15,7 @@
         "symfony/framework-bundle": "4.4.*",
         "symfony/google-mailer": "4.4.*",
         "symfony/http-client": "4.4.*",
+        "symfony/http-kernel": "4.4.*",
         "symfony/intl": "4.4.*",
         "symfony/mailer": "4.4.*",
         "symfony/mime": "4.4.*",
@@ -28,8 +29,7 @@
         "symfony/twig-bundle": "4.4.*",
         "symfony/validator": "4.4.*",
         "symfony/web-link": "4.4.*",
-        "symfony/yaml": "4.4.*",
-        "symfony/http-kernel": "4.4.*"
+        "symfony/yaml": "4.4.*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
