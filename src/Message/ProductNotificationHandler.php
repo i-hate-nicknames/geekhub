@@ -5,8 +5,14 @@ namespace App\Message;
 use Exception;
 use http\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Message;
+use Symfony\Component\Mime\Part\TextPart;
 
 class ProductNotificationHandler implements MessageHandlerInterface
 {
@@ -39,6 +45,16 @@ class ProductNotificationHandler implements MessageHandlerInterface
     public function __invoke(ProductNotification $message)
     {
         // todo: send mail :DDD
-        $this->logger->info($message->getText() . ' :DDDD');
+        $headers = (new Headers())
+            ->addMailboxListHeader('From', [$this->mailAddress])
+            ->addMailboxListHeader('To', [$this->mailAddress])
+            ->addTextHeader('Subject', 'Store notification');
+        $text = new TextPart($message->getText());
+        $email = new Message($headers, $text);
+        try {
+            $this->mailer->send($email);
+        } catch (HandlerFailedException $exception) {
+            $this->logger->error('I am very sorry dear friend your message is no more');
+        }
     }
 }
