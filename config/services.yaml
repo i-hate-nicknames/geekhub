@@ -29,6 +29,6 @@ services:
         arguments:
             $dbFile: '/data/database.json'
 
-    App\Services\Notifier:
+    App\Message\ProductNotificationHandler:
         arguments:
             $mailAddress: '%env(NOTIFICATION_ADDRESS)%'

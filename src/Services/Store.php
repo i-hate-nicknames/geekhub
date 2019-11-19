@@ -23,20 +23,15 @@ class Store
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var Notifier
-     */
-    private $notifier;
 
     /**
      * Store constructor.
      * @param Database $db
      */
-    public function __construct(Database $db, Notifier $notifier, LoggerInterface $logger)
+    public function __construct(Database $db, LoggerInterface $logger)
     {
         $this->db = $db;
         $this->logger = $logger;
-        $this->notifier = $notifier;
     }
 
     /**
@@ -132,7 +127,6 @@ class Store
         $this->persist();
         $msg = 'Created new product, id = ' . $product->getId();
         $this->logger->info($msg);
-        $this->notifier->notify($msg);
         return $product;
     }
 

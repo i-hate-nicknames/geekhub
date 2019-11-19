@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Message\ProductNotification;
 use App\Services\Store;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ class StoreController extends AbstractController
      */
     public function hello(Store $store)
     {
+        $this->dispatchMessage(new ProductNotification('helo'));
         return $this->render('categories.html.twig', ['categories' => $store->getProductsGroupedByCategory()]);
     }
 
