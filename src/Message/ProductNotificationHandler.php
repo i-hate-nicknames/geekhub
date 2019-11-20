@@ -51,10 +51,6 @@ class ProductNotificationHandler implements MessageHandlerInterface
             ->addTextHeader('Subject', 'Store notification');
         $text = new TextPart($message->getText());
         $email = new Message($headers, $text);
-        try {
-            $this->mailer->send($email);
-        } catch (HandlerFailedException $exception) {
-            $this->logger->error('I am very sorry dear friend your message is no more');
-        }
+//        $this->mailer->send($email);
     }
 }
