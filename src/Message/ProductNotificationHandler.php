@@ -51,6 +51,6 @@ class ProductNotificationHandler implements MessageHandlerInterface
             ->addTextHeader('Subject', 'Store notification');
         $text = new TextPart($message->getText());
         $email = new Message($headers, $text);
-//        $this->mailer->send($email);
+        $this->mailer->send($email);
     }
 }
