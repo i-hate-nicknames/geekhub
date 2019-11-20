@@ -23,15 +23,22 @@ class Store
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var Notifier
+     */
+    private $notifier;
 
     /**
      * Store constructor.
      * @param Database $db
+     * @param LoggerInterface $logger
+     * @param Notifier $notifier
      */
-    public function __construct(Database $db, LoggerInterface $logger)
+    public function __construct(Database $db, LoggerInterface $logger, Notifier $notifier)
     {
         $this->db = $db;
         $this->logger = $logger;
+        $this->notifier = $notifier;
     }
 
     /**
