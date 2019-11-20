@@ -20,34 +20,41 @@ class ProductNotificationHandler implements MessageHandlerInterface
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var string
-     */
-    private $mailAddress;
+
     /**
      * @var MailerInterface
      */
     private $mailer;
+    /**
+     * @var string
+     */
+    private $adminMail;
+    /**
+     * @var string
+     */
+    private $storeMail;
 
     /**
      * ProductNotificationHandler constructor.
-     * @param string $mailAddress
+     * @param string $adminMail
+     * @param string $storeMail
      * @param LoggerInterface $logger
      * @param MailerInterface $mailer
      */
-    public function __construct(string $mailAddress, LoggerInterface $logger, MailerInterface $mailer)
+    public function __construct(string $adminMail, string $storeMail, LoggerInterface $logger, MailerInterface $mailer)
     {
         $this->logger = $logger;
-        $this->mailAddress = $mailAddress;
         $this->mailer = $mailer;
+        $this->adminMail = $adminMail;
+        $this->storeMail = $storeMail;
     }
 
     public function __invoke(ProductNotification $message)
     {
         // todo: send mail :DDD
         $headers = (new Headers())
-            ->addMailboxListHeader('From', [$this->mailAddress])
-            ->addMailboxListHeader('To', [$this->mailAddress])
+            ->addMailboxListHeader('From', [$this->storeMail])
+            ->addMailboxListHeader('To', [$this->adminMail])
             ->addTextHeader('Subject', 'Store notification');
         $text = new TextPart($message->getText());
         $email = new Message($headers, $text);
