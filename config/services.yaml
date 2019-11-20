@@ -31,4 +31,5 @@ services:
 
     App\Message\ProductNotificationHandler:
         arguments:
-            $mailAddress: '%env(NOTIFICATION_ADDRESS)%'
+            $adminMail: '%env(ADMIN_MAIL)%'
+            $storeMail: '%env(STORE_MAIL)%'
