@@ -8,7 +8,9 @@ framework:
 #             async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
+            async: 'doctrine://default'
+            failed: 'doctrine://default?queue_name=failed'
 
         routing:
             # Route your messages to the transports
-#             'App\Message\ProductNotification': async
+             'App\Message\ProductNotification': async
