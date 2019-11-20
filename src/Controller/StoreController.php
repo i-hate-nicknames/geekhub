@@ -16,7 +16,6 @@ class StoreController extends AbstractController
      */
     public function hello(Store $store)
     {
-        $this->dispatchMessage(new ProductNotification('helo'));
         return $this->render('categories.html.twig', ['categories' => $store->getProductsGroupedByCategory()]);
     }
 

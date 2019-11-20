@@ -29,7 +29,7 @@ services:
         arguments:
             $dbFile: '/data/database.json'
 
-    App\Message\ProductNotificationHandler:
+    App\Services\Notifier:
         arguments:
             $adminMail: '%env(ADMIN_MAIL)%'
             $storeMail: '%env(STORE_MAIL)%'
