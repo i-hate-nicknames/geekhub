@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Message\ProductNotification;
+use App\Message\TelegramMessage;
 use App\Services\Store;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Notifier\Message\ChatMessage;
-use Symfony\Component\Notifier\Transport\TransportInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StoreController extends AbstractController
@@ -16,9 +14,9 @@ class StoreController extends AbstractController
      * @Route("/")
      * @return Response
      */
-    public function hello(Store $store, TransportInterface $transport)
+    public function hello(Store $store)
     {
-        $transport->send(new ChatMessage('tbh'));
+        $this->dispatchMessage(new TelegramMessage('hello from the bus tbh'));
         return $this->render('categories.html.twig', ['categories' => $store->getProductsGroupedByCategory()]);
     }
 

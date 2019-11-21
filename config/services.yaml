@@ -34,7 +34,9 @@ services:
             $adminMail: '%env(ADMIN_MAIL)%'
             $storeMail: '%env(STORE_MAIL)%'
 
-    Symfony\Component\Notifier\Transport\TransportInterface: '@transport.telegram'
+    App\Message\TelegramMessageHandler:
+        arguments:
+            Symfony\Component\Notifier\Transport\TransportInterface: '@transport.telegram'
 
     transport.telegram:
         class: 'Symfony\Component\Notifier\Bridge\Telegram\TelegramTransport'
