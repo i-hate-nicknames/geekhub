@@ -132,8 +132,9 @@ class Store
         $product = new Product(null, $name, $qty, $price);
         $this->db->addProduct($product);
         $this->persist();
-        $msg = 'Created new product, id = ' . $product->getId();
-        $this->logger->info($msg);
+        $message = 'Created new product, id = ' . $product->getId();
+        $this->logger->info($message);
+        $this->notifier->notify($message);
         return $product;
     }
 
@@ -163,6 +164,7 @@ class Store
             $targetCategoryName
         );
         $this->logger->info($message);
+        $this->notifier->notify($message);
     }
 
     /**
