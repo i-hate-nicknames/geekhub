@@ -33,6 +33,7 @@ services:
         arguments:
             $adminMail: '%env(ADMIN_MAIL)%'
             $storeMail: '%env(STORE_MAIL)%'
+            $notificationsDisabled: '%env(DISABLE_NOTIFICATIONS)%'
 
     App\Message\TelegramMessageHandler:
         arguments:

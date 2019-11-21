@@ -28,24 +28,35 @@ class Notifier
      * @var MessageBusInterface
      */
     private $bus;
+    private $notificationsDisabled;
 
     /**
      * Notifier constructor.
      * @param string $adminMail
      * @param string $storeMail
+     * @param $notificationsDisabled
      * @param MailerInterface $mailer
      * @param MessageBusInterface $bus
      */
-    public function __construct(string $adminMail, string $storeMail, MailerInterface $mailer, MessageBusInterface $bus)
-    {
+    public function __construct(
+        string $adminMail,
+        string $storeMail,
+        $notificationsDisabled,
+        MailerInterface $mailer,
+        MessageBusInterface $bus
+    ) {
         $this->adminMail = $adminMail;
         $this->storeMail = $storeMail;
         $this->mailer = $mailer;
         $this->bus = $bus;
+        $this->notificationsDisabled = $notificationsDisabled;
     }
 
     public function notify(string $text)
     {
+        if (!empty($this->notificationsDisabled)) {
+            return;
+        }
         // todo: use Symfony\Component\Notifier\Chatter for sending,
         // instead of explicit message dispatch.
         $this->bus->dispatch(new TelegramMessage($text));
