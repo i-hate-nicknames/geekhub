@@ -27,6 +27,7 @@
         "symfony/security-bundle": "4.4.*",
         "symfony/serializer-pack": "*",
         "symfony/swiftmailer-bundle": "^3.1",
+        "symfony/telegram-notifier": "5.0.0-BETA2",
         "symfony/translation": "4.4.*",
         "symfony/twig-bundle": "4.4.*",
         "symfony/validator": "4.4.*",
