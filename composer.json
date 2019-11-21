@@ -21,6 +21,7 @@
         "symfony/messenger": "4.4.*",
         "symfony/mime": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
+        "symfony/notifier": "5.0.0-BETA2",
         "symfony/orm-pack": "*",
         "symfony/process": "4.4.*",
         "symfony/security-bundle": "4.4.*",
