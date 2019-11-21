@@ -23,7 +23,7 @@ class Product
 
     /**
      * Product constructor.
-     * @param int $id
+     * @param int|null $id
      * @param string $name
      * @param int $qty
      * @param float $price
@@ -96,7 +96,7 @@ class Product
     /**
      * @return Category
      */
-    public function getCategory()
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
@@ -104,7 +104,7 @@ class Product
     /**
      * @param Category $category
      */
-    public function setCategory(Category $category)
+    public function setCategory(?Category $category)
     {
         $this->category = $category;
     }

@@ -28,3 +28,18 @@ services:
     App\Services\Database:
         arguments:
             $dbFile: '/data/database.json'
+
+    App\Services\Notifier:
+        arguments:
+            $adminMail: '%env(ADMIN_MAIL)%'
+            $storeMail: '%env(STORE_MAIL)%'
+            $notificationsDisabled: '%env(DISABLE_NOTIFICATIONS)%'
+
+    App\Message\TelegramMessageHandler:
+        arguments:
+            Symfony\Component\Notifier\Transport\TransportInterface: '@transport.telegram'
+
+    transport.telegram:
+        class: 'Symfony\Component\Notifier\Bridge\Telegram\TelegramTransport'
+        factory: ['Symfony\Component\Notifier\Transport', 'fromDsn']
+        arguments: ['%env(TELEGRAM_TRANSPORT_DSN)%']

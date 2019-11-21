@@ -18,3 +18,17 @@ services:
         - .:/application
         - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
         - ./data:/data:rw
+
+    mysql:
+      image: mysql:5.7
+      container_name: geekhub-db
+      working_dir: /application
+      volumes:
+        - .:/application
+      environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=geekhub
+        - MYSQL_USER=geekhub
+        - MYSQL_PASSWORD=geekhub
+      ports:
+        - "8032:3306"
