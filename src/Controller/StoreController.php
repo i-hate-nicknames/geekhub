@@ -2,17 +2,16 @@
 
 namespace App\Controller;
 
-use App\Message\TelegramMessage;
 use App\Services\Store;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StoreController extends AbstractController
 {
     /**
      * @Route("/")
+     * @param Store $store
      * @return Response
      * @throws \Exception
      */
@@ -23,14 +22,14 @@ class StoreController extends AbstractController
 
     /**
      * @Route("/createProduct/{name}/{price}/{qty}/{description}")
+     * @param Store $store
      * @param $name
      * @param int $price
      * @param int $qty
      * @param string $description
      * @return Response
-     * @throws \Exception
      */
-    public function createProduct(Store $store, $name, $price = 0, $qty = 0, $description='')
+    public function createProduct(Store $store, $name, $price = 0, $qty = 0, $description = '')
     {
         $store->createProduct($name, $qty, $price, $description);
         return $this->redirect('/');
