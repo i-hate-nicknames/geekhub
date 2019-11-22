@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
@@ -78,6 +79,18 @@ class Store
         $this->logger->info($message);
         $this->notifier->notify($message);
         return $product;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function createCategory(string $name)
+    {
+        $category = new Category();
+        $category->setName($name);
+        $entityManager = $this->doctrine->getManager();
+        $entityManager->persist($category);
+        $entityManager->flush();
     }
 
     /**

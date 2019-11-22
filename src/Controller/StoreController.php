@@ -47,4 +47,16 @@ class StoreController extends AbstractController
         $store->move($productId, $target);
         return $this->redirect('/');
     }
+
+    /**
+     * @Route("/createCategory/{name}")
+     * @param Store $store
+     * @param string $name
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function createCategory(Store $store, string $name)
+    {
+        $store->createCategory($name);
+        return $this->redirect('/');
+    }
 }
