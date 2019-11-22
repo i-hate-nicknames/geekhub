@@ -60,17 +60,17 @@ class Store
     /**
      * @param string $name
      * @param int $qty
-     * @param float $price
+     * @param int $price
+     * @param $description
      * @return Product
-     * @throws \Exception
      */
-    public function createProduct(string $name, int $qty, float $price): Product
+    public function createProduct(string $name, int $qty, int $price, $description): Product
     {
         $entityManager = $this->doctrine->getManager();
         $product = new Product();
         $product->setName($name)
             ->setQty($qty)
-            ->setDescription('')
+            ->setDescription($description)
             ->setPrice($price);
         $entityManager->persist($product);
         $entityManager->flush();

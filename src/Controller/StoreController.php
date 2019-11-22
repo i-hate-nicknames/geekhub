@@ -13,6 +13,7 @@ class StoreController extends AbstractController
     /**
      * @Route("/")
      * @return Response
+     * @throws \Exception
      */
     public function hello(Store $store)
     {
@@ -26,10 +27,11 @@ class StoreController extends AbstractController
      * @param int $qty
      * @param string $description
      * @return Response
+     * @throws \Exception
      */
     public function createProduct(Store $store, $name, $price = 0, $qty = 0, $description='')
     {
-        $store->createProduct($name, $qty, $price);
+        $store->createProduct($name, $qty, $price, $description);
         return $this->redirect('/');
     }
 
