@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Header\Headers;
@@ -27,18 +28,22 @@ class Store
      * @var Notifier
      */
     private $notifier;
+    /**
+     * @var ManagerRegistry
+     */
+    private $doctrine;
 
     /**
      * Store constructor.
-     * @param Database $db
+     * @param ManagerRegistry $doctrine
      * @param LoggerInterface $logger
      * @param Notifier $notifier
      */
-    public function __construct(Database $db, LoggerInterface $logger, Notifier $notifier)
+    public function __construct(ManagerRegistry $doctrine, LoggerInterface $logger, Notifier $notifier)
     {
-        $this->db = $db;
         $this->logger = $logger;
         $this->notifier = $notifier;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -107,9 +112,10 @@ class Store
      */
     public function getProductsGroupedByCategory(): array
     {
+        $products = $this->doctrine->getRepository(Product::class)->findAll();
         $grouped = [];
         /** @var Product $product */
-        foreach ($this->getAllProducts() as $product) {
+        foreach ($products as $product) {
             $cat = $product->getCategory();
             $catName = ($cat !== null) ? $cat->getName() : self::NO_CATEGORY;
             if (!array_key_exists($catName, $grouped)) {
@@ -129,9 +135,14 @@ class Store
      */
     public function createProduct(string $name, int $qty, float $price): Product
     {
-        $product = new Product(null, $name, $qty, $price);
-        $this->db->addProduct($product);
-        $this->persist();
+        $entityManager = $this->doctrine->getManager();
+        $product = new Product();
+        $product->setName($name)
+            ->setQty($qty)
+            ->setDescription('')
+            ->setPrice($price);
+        $entityManager->persist($product);
+        $entityManager->flush();
         $message = 'Created new product, id = ' . $product->getId();
         $this->logger->info($message);
         $this->notifier->notify($message);
