@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use http\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class Store
@@ -96,10 +98,21 @@ class Store
     /**
      * Move product to the specified category
      * @param int $productId
-     * @param int $targetCategoryId
+     * @param int $toId
      */
-    public function move(int $productId, int $targetCategoryId)
+    public function move(int $productId, int $toId)
     {
-        throw new NotImplementedException('Moving is not implemented yet');
+        $product = $this->doctrine->getRepository(Product::class)->find($productId);
+        $targetCategory = $this->doctrine->getRepository(Category::class)->find($toId);
+        if (null === $product) {
+            throw new NotFoundHttpException("Product with id = $product doesnt exist");
+        }
+        if (null === $targetCategory) {
+            throw new NotFoundHttpException("Category with id = $toId doesnt exist");
+        }
+        $product->setCategory($targetCategory);
+        $entityManager = $this->doctrine->getManager();
+        $entityManager->persist($product);
+        $entityManager->flush();
     }
 }
