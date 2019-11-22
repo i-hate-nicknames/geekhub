@@ -20,13 +20,14 @@ class StoreController extends AbstractController
     }
 
     /**
-     * @Route("/createProduct/{name}/{price}/{qty}")
+     * @Route("/createProduct/{name}/{price}/{qty}/{description}")
      * @param $name
-     * @param float $price
+     * @param int $price
      * @param int $qty
+     * @param string $description
      * @return Response
      */
-    public function createProduct(Store $store, $name, $price = 0.0, $qty = 0)
+    public function createProduct(Store $store, $name, $price = 0, $qty = 0, $description='')
     {
         $store->createProduct($name, $qty, $price);
         return $this->redirect('/');
