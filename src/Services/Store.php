@@ -46,16 +46,11 @@ class Store
      */
     public function getProductsGroupedByCategory(): array
     {
-        $products = $this->doctrine->getRepository(Product::class)->findAll();
         $grouped = [];
-        /** @var Product $product */
-        foreach ($products as $product) {
-            $cat = $product->getCategory();
-            $catName = ($cat !== null) ? $cat->getName() : self::NO_CATEGORY;
-            if (!array_key_exists($catName, $grouped)) {
-                $grouped[$catName] = [];
-            }
-            $grouped[$catName][] = $product;
+        $categories = $this->doctrine->getRepository(Category::class)->findAll();
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $grouped[$category->getName()] = $category->getProducts();
         }
         return $grouped;
     }
