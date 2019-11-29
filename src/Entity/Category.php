@@ -2,83 +2,82 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ */
 class Category
 {
-    /** @var int */
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private $id;
 
-    /** @var string */
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $name;
 
-    /** @var array */
-    private $products = [];
-
     /**
-     * Category constructor.
-     * @param int $id
-     * @param string $name
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
      */
-    public function __construct(int $id, string $name)
+    private $products;
+
+    public function __construct()
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->products = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
-     * @return array
+     * @return Collection|Product[]
      */
-    public function getProducts()
+    public function getProducts(): Collection
     {
         return $this->products;
     }
 
-    /**
-     * @param array $products
-     */
-    public function setProducts($products)
+    public function addProduct(Product $product): self
     {
-        $this->products = $products;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setCategory($this);
+        }
+
+        return $this;
     }
 
-
-    /**
-     * @param Product $product
-     * @throws \Exception when the product already belongs to this category
-     */
-    public function addProduct(Product $product)
+    public function removeProduct(Product $product): self
     {
-        $this->products[] = $product;
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getCategory() === $this) {
+                $product->setCategory(null);
+            }
+        }
+
+        return $this;
     }
 }

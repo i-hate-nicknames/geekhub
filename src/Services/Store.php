@@ -4,21 +4,16 @@ namespace App\Services;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use http\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Header\Headers;
-use Symfony\Component\Mime\Message;
-use Symfony\Component\Mime\Part\TextPart;
-use function array_filter;
-use function array_merge;
-use function sprintf;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class Store
 {
     public const NO_CATEGORY = 'None';
 
-    /** @var Database */
-    private $db;
     /**
      * @var LoggerInterface
      */
@@ -27,78 +22,22 @@ class Store
      * @var Notifier
      */
     private $notifier;
+    /**
+     * @var ManagerRegistry
+     */
+    private $doctrine;
 
     /**
      * Store constructor.
-     * @param Database $db
+     * @param ManagerRegistry $doctrine
      * @param LoggerInterface $logger
      * @param Notifier $notifier
      */
-    public function __construct(Database $db, LoggerInterface $logger, Notifier $notifier)
+    public function __construct(ManagerRegistry $doctrine, LoggerInterface $logger, Notifier $notifier)
     {
-        $this->db = $db;
         $this->logger = $logger;
         $this->notifier = $notifier;
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function getCategories(): array
-    {
-        return $this->db->getCategories();
-    }
-
-    /**
-     * @param int $categoryId
-     * @return Category
-     * @throws \Exception
-     */
-    public function getCategory(int $categoryId): Category
-    {
-        $cat = $this->db->getCategory($categoryId);
-        if ($cat === null) {
-            throw new \Exception("Category with id $categoryId not found!");
-        }
-        return $cat;
-    }
-
-    /**
-     * @param string $categoryName
-     * @return Category
-     * @throws \Exception
-     */
-    public function getCategoryByName(string $categoryName): Category
-    {
-        $cat = $this->db->getCategoryByName($categoryName);
-        if ($cat === null) {
-            throw new \Exception("Category with name $categoryName not found!");
-        }
-        return $cat;
-    }
-
-    /**
-     * @param int $productId
-     * @return Product
-     * @throws \Exception
-     */
-    public function getProduct(int $productId): Product
-    {
-        $product = $this->db->getProduct($productId);
-        if ($product === null) {
-            throw new \Exception("Product $productId not found!");
-        }
-        return $product;
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function getAllProducts(): array
-    {
-        return $this->db->getProducts();
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -107,9 +46,10 @@ class Store
      */
     public function getProductsGroupedByCategory(): array
     {
+        $products = $this->doctrine->getRepository(Product::class)->findAll();
         $grouped = [];
         /** @var Product $product */
-        foreach ($this->getAllProducts() as $product) {
+        foreach ($products as $product) {
             $cat = $product->getCategory();
             $catName = ($cat !== null) ? $cat->getName() : self::NO_CATEGORY;
             if (!array_key_exists($catName, $grouped)) {
@@ -123,15 +63,20 @@ class Store
     /**
      * @param string $name
      * @param int $qty
-     * @param float $price
+     * @param int $price
+     * @param $description
      * @return Product
-     * @throws \Exception
      */
-    public function createProduct(string $name, int $qty, float $price): Product
+    public function createProduct(string $name, int $qty, int $price, $description): Product
     {
-        $product = new Product(null, $name, $qty, $price);
-        $this->db->addProduct($product);
-        $this->persist();
+        $entityManager = $this->doctrine->getManager();
+        $product = new Product();
+        $product->setName($name)
+            ->setQty($qty)
+            ->setDescription($description)
+            ->setPrice($price);
+        $entityManager->persist($product);
+        $entityManager->flush();
         $message = 'Created new product, id = ' . $product->getId();
         $this->logger->info($message);
         $this->notifier->notify($message);
@@ -139,101 +84,35 @@ class Store
     }
 
     /**
-     * Move product identified by $productName to $targetCategory
-     * @param string $productName
-     * @param string $targetCategoryName
-     * @throws \Exception if either product or category do not exist
+     * @param string $name
      */
-    public function move(string $productName, string $targetCategoryName)
+    public function createCategory(string $name)
     {
-        if (strtolower($targetCategoryName) === strtolower(self::NO_CATEGORY)) {
-            throw new \Exception('Removing products from categories is not allowed');
+        $category = new Category();
+        $category->setName($name);
+        $entityManager = $this->doctrine->getManager();
+        $entityManager->persist($category);
+        $entityManager->flush();
+    }
+
+    /**
+     * Move product to the specified category
+     * @param int $productId
+     * @param int $toId
+     */
+    public function move(int $productId, int $toId)
+    {
+        $product = $this->doctrine->getRepository(Product::class)->find($productId);
+        $targetCategory = $this->doctrine->getRepository(Category::class)->find($toId);
+        if (null === $product) {
+            throw new NotFoundHttpException("Product with id = $product doesnt exist");
         }
-        $product = $this->getProduct($productName);
-        $oldCategory = $product->getCategory();
-        $targetCategory = $this->getCategoryByName($targetCategoryName);
-        if ($oldCategory !== null) {
-            $this->removeProductFromCategory($oldCategory, $product);
+        if (null === $targetCategory) {
+            throw new NotFoundHttpException("Category with id = $toId doesnt exist");
         }
-        $this->addProductToCategory($targetCategory, $product);
-        $this->persist();
-        $message = sprintf(
-            'Moved product %s from %s to %s',
-            $productName,
-            $oldCategory->getName(),
-            $targetCategoryName
-        );
-        $this->logger->info($message);
-        $this->notifier->notify($message);
-    }
-
-    /**
-     * @param Category $category
-     * @param Product $product
-     * @throws \Exception
-     */
-    private function removeProductFromCategory(Category $category, Product $product)
-    {
-        $this->validateContains($category, $product);
-        $products = array_filter($category->getProducts(), function (Product $catProduct) use ($product) {
-            return $catProduct->getId() !== $product->getId();
-        });
-        $category->setProducts($products);
-        $product->setCategory(null);
-    }
-
-    /**
-     * @param Category $category
-     * @param Product $product
-     * @throws \Exception
-     */
-    private function addProductToCategory(Category $category, Product $product)
-    {
-        $this->validateContains($category, $product);
-        $products = array_merge($category->getProducts(), [$product]);
-        $category->setProducts($products);
-        $product->setCategory($category);
-    }
-
-    /**
-     * @param Category $category
-     * @param Product $product
-     * @return bool
-     */
-    private function hasProduct(Category $category, Product $product): bool
-    {
-        foreach ($category->getProducts() as $existingProduct) {
-            if ($existingProduct->getId() === $product->getId()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Validate if given category contains given product, and that the product category is
-     * set to the category
-     * @param Category $category
-     * @param Product $product
-     * @throws \Exception
-     */
-    private function validateContains(Category $category, Product $product)
-    {
-        if (!$this->hasProduct($category, $product)) {
-            throw new \Exception(sprintf(
-                'Product %s doesn\'t belong to the category %s',
-                $product->getName(),
-                $category->getName()
-            ));
-        }
-    }
-
-    /**
-     * Save current state of the Store to the disk.
-     * This method should be called after editing product
-     */
-    private function persist()
-    {
-        $this->db->save();
+        $product->setCategory($targetCategory);
+        $entityManager = $this->doctrine->getManager();
+        $entityManager->persist($product);
+        $entityManager->flush();
     }
 }

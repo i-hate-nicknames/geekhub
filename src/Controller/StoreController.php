@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Message\TelegramMessage;
 use App\Services\Store;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +11,9 @@ class StoreController extends AbstractController
 {
     /**
      * @Route("/")
+     * @param Store $store
      * @return Response
+     * @throws \Exception
      */
     public function hello(Store $store)
     {
@@ -20,15 +21,17 @@ class StoreController extends AbstractController
     }
 
     /**
-     * @Route("/createProduct/{name}/{price}/{qty}")
+     * @Route("/createProduct/{name}/{price}/{qty}/{description}")
+     * @param Store $store
      * @param $name
-     * @param float $price
+     * @param int $price
      * @param int $qty
+     * @param string $description
      * @return Response
      */
-    public function createProduct(Store $store, $name, $price = 0.0, $qty = 0)
+    public function createProduct(Store $store, $name, $price = 0, $qty = 0, $description = '')
     {
-        $store->createProduct($name, $qty, $price);
+        $store->createProduct($name, $qty, $price, $description);
         return $this->redirect('/');
     }
 
@@ -42,6 +45,18 @@ class StoreController extends AbstractController
     public function moveProduct(Store $store, $productId, $target)
     {
         $store->move($productId, $target);
+        return $this->redirect('/');
+    }
+
+    /**
+     * @Route("/createCategory/{name}")
+     * @param Store $store
+     * @param string $name
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function createCategory(Store $store, string $name)
+    {
+        $store->createCategory($name);
         return $this->redirect('/');
     }
 }

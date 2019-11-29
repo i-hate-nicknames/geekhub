@@ -2,126 +2,107 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ */
 class Product
 {
-    /** @var string */
-    private $name;
-
-    /** @var int */
-    private $qty;
-
-    /** @var Category */
-    private $category;
-
-    /** @var float */
-    private $price;
-
     /**
-     * @var int
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * Product constructor.
-     * @param int|null $id
-     * @param string $name
-     * @param int $qty
-     * @param float $price
+     * @ORM\Column(type="string", length=255)
      */
-    public function __construct(?int $id, string $name, int $qty, float $price)
-    {
-        $this->name = $name;
-        $this->qty = $qty;
-        $this->price = $price;
-        $this->id = $id;
-    }
+    private $name;
 
     /**
-     * @param Product $other
-     * @return bool true if this is the same product as $other
+     * @ORM\Column(type="integer")
      */
-    public function equals(Product $other): bool
-    {
-        return $this->getId() === $other->getName();
-    }
+    private $price;
 
     /**
-     * @return int|null
+     * @ORM\Column(type="integer")
      */
+    private $qty;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
+     */
+    private $category;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQty()
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getQty(): ?int
     {
         return $this->qty;
     }
 
-    /**
-     * @param int $qty
-     */
-    public function setQty($qty)
+    public function setQty(int $qty): self
     {
         $this->qty = $qty;
+
+        return $this;
     }
 
-    /**
-     * @return Category
-     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    /**
-     * @param Category $category
-     */
-    public function setCategory(?Category $category)
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
-    }
 
-    /**
-     * @return float
-     */
-    public function getPrice(): float
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param float $price
-     */
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
+        return $this;
     }
 }
