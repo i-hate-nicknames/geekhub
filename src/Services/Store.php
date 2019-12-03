@@ -7,6 +7,8 @@ use App\Entity\Product;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function get_class;
+use function var_export;
 
 class Store
 {
@@ -45,7 +47,7 @@ class Store
     public function getProductsGroupedByCategory(): array
     {
         $grouped = [];
-        $categories = $this->doctrine->getRepository(Category::class)->findAll();
+        $categories = $this->doctrine->getRepository(Category::class)->getCategoriesWithProducts();
         /** @var Category $category */
         foreach ($categories as $category) {
             $grouped[$category->getName()] = $category->getProducts();
