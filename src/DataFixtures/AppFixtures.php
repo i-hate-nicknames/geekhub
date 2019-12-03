@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use App\Entity\ProductPosition;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -34,11 +35,16 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < self::NUM_PRODUCTS; ++$i) {
             $productUser = $users[$i % self::NUM_USERS];
             $product = new Product();
+            $position = new ProductPosition();
+            $manager->persist($position);
+            $position->setProduct($product)
+                ->setCategory($cats[$i % self::NUM_CATEGORIES])
+                ->setPosition($i);
             $product->setName('product' . $i)
                 ->setDescription('descr' . $i)
                 ->setPrice(10 * $i)
                 ->setQty(2 * $i)
-                ->addCategory($cats[$i % self::NUM_CATEGORIES])
+                ->addProductPosition($position)
                 ->setUser($productUser);
             $productUser->addProduct($product);
             $manager->persist($product);
