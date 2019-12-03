@@ -5,10 +5,8 @@ namespace App\Services;
 use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use http\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class Store
 {
