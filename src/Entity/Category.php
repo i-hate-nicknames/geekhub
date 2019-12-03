@@ -24,18 +24,12 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Product", mappedBy="categories")
-     */
-    private $products;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProductPosition", mappedBy="category", orphanRemoval=true)
      */
     private $productPositions;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
         $this->productPositions = new ArrayCollection();
     }
 
@@ -61,27 +55,7 @@ class Category
      */
     public function getProducts(): Collection
     {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->addCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-            $product->removeCategory($this);
-        }
-
-        return $this;
+        return [];
     }
 
     /**
