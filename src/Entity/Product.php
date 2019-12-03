@@ -113,7 +113,9 @@ class Product
      */
     public function getCategories(): Collection
     {
-        return $this->categories;
+        return $this->getProductPositions()->map(function ($position) {
+            return $position->getCategory();
+        });
     }
 
     public function getUser(): ?User

@@ -55,7 +55,9 @@ class Category
      */
     public function getProducts(): Collection
     {
-        return [];
+        return $this->getProductPositions()->map(function ($position) {
+            return $position->getProduct();
+        });
     }
 
     /**
