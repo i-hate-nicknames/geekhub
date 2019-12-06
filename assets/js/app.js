@@ -6,9 +6,13 @@
  */
 
 // any CSS you require will output into a single css file (app.css in this case)
-require('../css/app.css');
+import '../css/app.css';
+import _ from "lodash";
+import { Rect } from './rect.js'
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+let r = new Rect(5, 10);
+console.log(r.area)
+console.log(_.padStart('test', 20));
