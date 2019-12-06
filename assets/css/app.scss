@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap-reboot";
+
 $primary-color: #333;
 
 body {
@@ -5,6 +7,7 @@ body {
 }
 
 table {
+    margin: 20px;
     tr {
         th {
             text-decoration: underline;
