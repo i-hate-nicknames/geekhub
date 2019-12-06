@@ -1,0 +1,13 @@
+$primary-color: #333;
+
+body {
+    color: $primary-color;
+}
+
+table {
+    tr {
+        th {
+            text-decoration: underline;
+        }
+    }
+}

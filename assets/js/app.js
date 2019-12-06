@@ -6,7 +6,7 @@
  */
 
 // any CSS you require will output into a single css file (app.css in this case)
-import '../css/app.css';
+import '../css/app.scss';
 import _ from "lodash";
 import { Rect } from './rect.js'
 
