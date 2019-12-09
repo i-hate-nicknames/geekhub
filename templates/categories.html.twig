@@ -10,17 +10,9 @@
     }
 </style>
 <table>
-    <tr><th>Category name</th><th>Product id</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>
-    {% for categoryName, products in categories %}
-        <tr><td rowspan="{{ products|length + 1 }}">{{categoryName}}</td></tr>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.getId() }}</td>
-                <td>{{ product.getName() }}</td>
-                <td>{{ product.getPrice() }}</td>
-                <td>{{ product.getQty() }}</td>
-            </tr>
-        {% endfor %}
+    <tr><th>Category name</th></tr>
+    {% for category in categories %}
+        <tr><td>{{ category.title }}</td></tr>
     {% endfor %}
 </table>
 {% endblock %}
