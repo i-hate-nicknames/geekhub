@@ -12,9 +12,11 @@
     <table>
         <tr><th>Name</th><th>Age</th><th>Gender</th></tr>
         {% for user in users %}
-            <tr><td>{{ user.name }}</td></tr>
-            <tr><td>{{ user.age }}</td></tr>
-            <tr><td>{{ user.isMale }}</td></tr>
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.age }}</td>
+            <td>{% if user.male %}Male{% else %}Female{% endif %}</td>
+        </tr>
         {% endfor %}
     </table>
 {% endblock %}
