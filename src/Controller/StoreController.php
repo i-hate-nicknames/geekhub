@@ -53,4 +53,24 @@ class StoreController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(User::class);
         return $this->render('users.html.twig', ['users' => $repository->findAll()]);
     }
+
+    /**
+     * @Route("/product/{id}", name="product")
+     * @param int $id
+     * @return Response
+     */
+    public function product(int $id)
+    {
+        $product = $this->getDoctrine()
+            ->getRepository(Product::class)
+            ->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+        return $this->render('product.html.twig', ['product' => $product]);
+    }
 }
