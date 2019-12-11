@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\User;
+use App\Forms\ProductType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -67,10 +70,38 @@ class StoreController extends AbstractController
 
         if (!$product) {
             throw $this->createNotFoundException(
-                'No product found for id '.$id
+                'No product found for id ' . $id
             );
         }
 
         return $this->render('product.html.twig', ['product' => $product]);
+    }
+
+    /**
+     * @Route("/product/{id}/edit", name="editProduct")
+     * @param int $id
+     * @return Response
+     */
+    public function editProduct(int $id, Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository(Product::class);
+        $product = $repository->find($id);
+
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($product);
+            $entityManager->flush();
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('form', [
+            'form' => $form->createView()
+        ]);
     }
 }
