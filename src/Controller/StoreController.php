@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Forms\ProductType;
+use App\Forms\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,6 +99,35 @@ class StoreController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
             return $this->redirectToRoute('home');
+        }
+
+        return $this->render('form', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/user/{id}/edit", name="editUser")
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    public function editUser(int $id, Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            return $this->redirectToRoute('editUser', ['id' => $user->getId()]);
         }
 
         return $this->render('form', [
