@@ -1,0 +1,16 @@
+@import "~bootstrap/scss/bootstrap-reboot";
+
+$primary-color: #333;
+
+body {
+    color: $primary-color;
+}
+
+table {
+    margin: 20px;
+    tr {
+        th {
+            text-decoration: underline;
+        }
+    }
+}

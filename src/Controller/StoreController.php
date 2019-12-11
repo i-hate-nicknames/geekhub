@@ -2,15 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
+use App\Entity\User;
+use App\Forms\ProductType;
 use App\Services\Store;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function var_export;
 
 class StoreController extends AbstractController
 {
     /**
-     * @Route("/")
+     * @Route("/", name="home")
      * @param Store $store
      * @return Response
      * @throws \Exception
@@ -18,6 +23,36 @@ class StoreController extends AbstractController
     public function hello(Store $store)
     {
         return $this->render('categories.html.twig', ['categories' => $store->getProductsGroupedByCategory()]);
+    }
+
+    /**
+     * @Route("/form")
+     */
+    public function form(Request $request)
+    {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+
+        $form->handleRequest($request);
+
+        $repository = $this->getDoctrine()->getRepository(User::class);
+
+        $user = $repository->findOneBy(['name' => 'user1']);
+        $product->setUser($user);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($product);
+            $entityManager->flush();
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('form', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**

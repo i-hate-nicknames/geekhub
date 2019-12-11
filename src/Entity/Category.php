@@ -24,13 +24,13 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Product", mappedBy="categories")
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductPosition", mappedBy="category", orphanRemoval=true)
      */
-    private $products;
+    private $productPositions;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->productPositions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,24 +55,37 @@ class Category
      */
     public function getProducts(): Collection
     {
-        return $this->products;
+        return $this->getProductPositions()->map(function ($position) {
+            return $position->getProduct();
+        });
     }
 
-    public function addProduct(Product $product): self
+    /**
+     * @return Collection|ProductPosition[]
+     */
+    public function getProductPositions(): Collection
     {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->addCategory($this);
+        return $this->productPositions;
+    }
+
+    public function addProductPosition(ProductPosition $productPosition): self
+    {
+        if (!$this->productPositions->contains($productPosition)) {
+            $this->productPositions[] = $productPosition;
+            $productPosition->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): self
+    public function removeProductPosition(ProductPosition $productPosition): self
     {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-            $product->removeCategory($this);
+        if ($this->productPositions->contains($productPosition)) {
+            $this->productPositions->removeElement($productPosition);
+            // set the owning side to null (unless already changed)
+            if ($productPosition->getCategory() === $this) {
+                $productPosition->setCategory(null);
+            }
         }
 
         return $this;
