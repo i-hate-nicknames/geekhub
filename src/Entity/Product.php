@@ -49,6 +49,11 @@ class Product
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $goOnSale;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -143,6 +148,18 @@ class Product
         if ($this->user->contains($user)) {
             $this->user->removeElement($user);
         }
+
+        return $this;
+    }
+
+    public function getGoOnSale(): ?\DateTimeInterface
+    {
+        return $this->goOnSale;
+    }
+
+    public function setGoOnSale(?\DateTimeInterface $goOnSale): self
+    {
+        $this->goOnSale = $goOnSale;
 
         return $this;
     }
