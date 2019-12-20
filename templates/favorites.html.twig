@@ -15,6 +15,7 @@
             <div class="product">
                 <div class="name"><a href="{{ path('product', {id: product.id}) }}">{{ product.title }}</a></div>
                 <div class="price">{{ product.price }}</div>
+                <div class="remove"><a href="{{ path('favoritesRemoveProduct', {id: product.id}) }}">Remove</a></div>
             </div>
         {% endfor %}
     </div>

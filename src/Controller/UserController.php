@@ -9,6 +9,7 @@ use App\Forms\ProductType;
 use App\Forms\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -87,6 +88,37 @@ class UserController extends AbstractController
         $user->addProduct($product);
         $entityManager->flush();
         return $this->redirectToRoute('products');
+    }
+
+    /**
+     * @Route("/favorites/remove/{id}", name="favoritesRemoveProduct")
+     * @return Response
+     * @throws \Exception
+     */
+    public function removeProduct(int $id, Request $request)
+    {
+        $referer = $request->headers->get('referer');
+        $user = $this->getActiveUser();
+        if (!$user) {
+            $this->addFlash('error', 'Please log in');
+            return new RedirectResponse($referer);
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $repo = $entityManager->getRepository(Product::class);
+        $product = $repo->find($id);
+        if (!$product) {
+            $this->addFlash('error', 'Product doesn\'t exist');
+            // todo: redirect to referer
+            return new RedirectResponse($referer);
+        }
+        if (!$user->hasProduct($product)) {
+            $this->addFlash('error', 'This product is not in your favorite list');
+            // todo: redirect to referer
+            return new RedirectResponse($referer);
+        }
+        $user->removeProduct($product);
+        $entityManager->flush();
+        return new RedirectResponse($referer);
     }
 
     // todo: move this somewhere common to controllers?

@@ -21,6 +21,8 @@
             {% if (user) %}
                 {% if not (user.hasProduct(product)) %}
                 <td><a href="{{ path('favoritesAddProduct', {'id': product.id}) }}">Add to favorites</a></td>
+                {% else %}
+                <td><a href="{{ path('favoritesRemoveProduct', {'id': product.id}) }}">Remove from favorites</a></td>
                 {% endif %}
             {% endif %}
         </tr>
