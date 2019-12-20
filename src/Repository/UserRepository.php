@@ -47,4 +47,16 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * Set user with the given user id to be target. Set target value of all other users to 0
+     * @param int $userId
+     */
+    public function setTarget(int $userId)
+    {
+        $this->getEntityManager()
+            ->createQuery('UPDATE App\Entity\User u SET u.isTarget = CASE WHEN u.id=:userId THEN 1 ELSE 0 END')
+            ->setParameter('userId', $userId)
+            ->getResult();
+    }
 }
