@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+    favorites
+{% endblock %}
+
+{% block body %}
+    {% if (user) %}
+<div class="hello">Hello {{ user.name }}</div>
+<div class="title">Favorites</div>
+<div class="favorites">
+    <div class="products">products be here</div>
+    <div class="users">users be here</div>
+</div>
+    {% else %}
+    <div class="h1">Please, log in</div>
+    {% endif %}
+{% endblock %}

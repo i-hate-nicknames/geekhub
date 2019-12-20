@@ -48,17 +48,6 @@ class StoreController extends AbstractController
     }
 
     /**
-     * @Route("/users", name="users")
-     * @return Response
-     * @throws \Exception
-     */
-    public function users()
-    {
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        return $this->render('users.html.twig', ['users' => $repository->findAll()]);
-    }
-
-    /**
      * @Route("/product/{id}", name="product")
      * @param int $id
      * @return Response
@@ -104,40 +93,5 @@ class StoreController extends AbstractController
         return $this->render('form', [
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * @Route("/user/{id}/edit", name="editUser")
-     * @param int $id
-     * @param Request $request
-     * @return Response
-     */
-    public function editUser(int $id, Request $request)
-    {
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        $user = $repository->find($id);
-
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-            return $this->redirectToRoute('editUser', ['id' => $user->getId()]);
-        }
-
-        return $this->render('form', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    private function getActiveUser(): ?User
-    {
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        return $repository->getTargetUser();
     }
 }
