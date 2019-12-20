@@ -59,4 +59,17 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('userId', $userId)
             ->getResult();
     }
+
+    /**
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTargetUser(): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.isTarget = 1')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 }

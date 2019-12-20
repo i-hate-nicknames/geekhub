@@ -134,4 +134,10 @@ class StoreController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    private function getActiveUser(): ?User
+    {
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        return $repository->getTargetUser();
+    }
 }
