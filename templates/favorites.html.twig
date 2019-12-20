@@ -19,7 +19,14 @@
             </div>
         {% endfor %}
     </div>
-    <div class="users">users be here</div>
+    <div class="users">
+        {% for user in user.favoriteUsers %}
+            <div class="user">
+                <div class="name"><a href="{{ path('editUser', {id: user.id}) }}">{{ user.name }}</a></div>
+                <div class="remove"><a href="{{ path('favoritesRemoveUser', {id: user.id}) }}">Remove</a></div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
     {% else %}
     <div class="h1">Please, log in</div>

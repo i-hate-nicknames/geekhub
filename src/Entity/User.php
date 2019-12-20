@@ -43,9 +43,15 @@ class User
      */
     private $isTarget = false;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     */
+    private $favoriteUsers;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->favoriteUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,6 +128,11 @@ class User
         return $this->products->contains($product);
     }
 
+    public function hasFavoriteUser(User $user): bool
+    {
+        return $this->favoriteUsers->contains($user);
+    }
+
     public function getIsTarget(): ?bool
     {
         return $this->isTarget;
@@ -130,6 +141,32 @@ class User
     public function setIsTarget(bool $isTarget): self
     {
         $this->isTarget = $isTarget;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getFavoriteUsers(): Collection
+    {
+        return $this->favoriteUsers;
+    }
+
+    public function addFavoriteUser(self $favoriteUser): self
+    {
+        if (!$this->favoriteUsers->contains($favoriteUser)) {
+            $this->favoriteUsers[] = $favoriteUser;
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteUser(self $favoriteUser): self
+    {
+        if ($this->favoriteUsers->contains($favoriteUser)) {
+            $this->favoriteUsers->removeElement($favoriteUser);
+        }
 
         return $this;
     }

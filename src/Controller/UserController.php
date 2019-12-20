@@ -24,7 +24,8 @@ class UserController extends AbstractController
     public function users()
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
-        return $this->render('users.html.twig', ['users' => $repository->findAll()]);
+        $activeUser = $this->getActiveUser();
+        return $this->render('users.html.twig', ['users' => $repository->findAll(), 'activeUser' => $activeUser]);
     }
 
     /**
@@ -67,7 +68,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/favorites/add/{id}", name="favoritesAddProduct")
+     * @Route("/favorites/products/add/{id}", name="favoritesAddProduct")
      * @return Response
      * @throws \Exception
      */
@@ -91,7 +92,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/favorites/remove/{id}", name="favoritesRemoveProduct")
+     * @Route("/favorites/products/remove/{id}", name="favoritesRemoveProduct")
      * @return Response
      * @throws \Exception
      */
@@ -117,6 +118,61 @@ class UserController extends AbstractController
             return new RedirectResponse($referer);
         }
         $user->removeProduct($product);
+        $entityManager->flush();
+        return new RedirectResponse($referer);
+    }
+
+    /**
+     * @Route("/favorites/users/add/{id}", name="favoritesAddUser")
+     * @return Response
+     * @throws \Exception
+     */
+    public function addFavoriteUser(int $id)
+    {
+        $user = $this->getActiveUser();
+        if (!$user) {
+            $this->addFlash('error', 'Please log in');
+            return $this->redirectToRoute('products');
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $repo = $entityManager->getRepository(User::class);
+        $fav = $repo->find($id);
+        if (!$fav) {
+            $this->addFlash('error', 'User doesn\'t exist');
+            return $this->redirectToRoute('users');
+        }
+        $user->addFavoriteUser($fav);
+        $entityManager->flush();
+        return $this->redirectToRoute('users');
+    }
+
+    /**
+     * @Route("/favorites/users/remove/{id}", name="favoritesRemoveUser")
+     * @return Response
+     * @throws \Exception
+     */
+    public function removeFavoriteUser(int $id, Request $request)
+    {
+        $referer = $request->headers->get('referer');
+        $user = $this->getActiveUser();
+        if (!$user) {
+            $this->addFlash('error', 'Please log in');
+            return new RedirectResponse($referer);
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $repo = $entityManager->getRepository(User::class);
+        $fav = $repo->find($id);
+        if (!$fav) {
+            $this->addFlash('error', 'User doesn\'t exist');
+            // todo: redirect to referer
+            return new RedirectResponse($referer);
+        }
+        if (!$user->hasFavoriteUser($fav)) {
+            $this->addFlash('error', 'This user is not in your favorite list');
+            // todo: redirect to referer
+            return new RedirectResponse($referer);
+        }
+        $user->removeFavoriteUser($fav);
         $entityManager->flush();
         return new RedirectResponse($referer);
     }

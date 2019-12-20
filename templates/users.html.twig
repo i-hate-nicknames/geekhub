@@ -17,6 +17,15 @@
             <td>{{ user.age }}</td>
             <td>{% if user.male %}Male{% else %}Female{% endif %}</td>
             <td><a href="{{ path('editUser', {'id': user.id}) }}">Edit</a></td>
+            {% if (activeUser) %}
+                {% if (activeUser.id == user.id) %}
+                    <td>It's you!</td>
+                {% elseif not (activeUser.hasFavoriteUser(user)) %}
+                    <td><a href="{{ path('favoritesAddUser', {'id': user.id}) }}">Add to favorites</a></td>
+                {% else %}
+                    <td><a href="{{ path('favoritesRemoveUser', {'id': user.id}) }}">Remove from favorites</a></td>
+                {% endif %}
+            {% endif %}
         </tr>
         {% endfor %}
     </table>
