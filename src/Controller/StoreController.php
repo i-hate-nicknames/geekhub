@@ -98,7 +98,7 @@ class StoreController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($product);
             $entityManager->flush();
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('editProduct', ['id' => $id]);
         }
 
         return $this->render('form', [

@@ -28,7 +28,8 @@ class ProductType extends AbstractType
             ])
             ->add('goOnSale', DateType::class, [
                 'html5' => 'true',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'required' => 'false'
             ])
             ->add('save', SubmitType::class);
     }
