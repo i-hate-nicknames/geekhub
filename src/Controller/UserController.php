@@ -65,6 +65,31 @@ class UserController extends AbstractController
         return $this->render('favorites.html.twig', ['user' => $this->getActiveUser()]);
     }
 
+    /**
+     * @Route("/favorites/add/{id}", name="favoritesAddProduct")
+     * @return Response
+     * @throws \Exception
+     */
+    public function addProduct(int $id)
+    {
+        $user = $this->getActiveUser();
+        if (!$user) {
+            $this->addFlash('error', 'Please log in');
+            return $this->redirectToRoute('products');
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $repo = $entityManager->getRepository(Product::class);
+        $product = $repo->find($id);
+        if (!$product) {
+            $this->addFlash('error', 'Product doesn\'t exist');
+            return $this->redirectToRoute('products');
+        }
+        $user->addProduct($product);
+        $entityManager->flush();
+        return $this->redirectToRoute('products');
+    }
+
+    // todo: move this somewhere common to controllers?
     private function getActiveUser(): ?User
     {
         $repository = $this->getDoctrine()->getRepository(User::class);

@@ -43,8 +43,9 @@ class StoreController extends AbstractController
      */
     public function products()
     {
+        $user = $this->getActiveUser();
         $repository = $this->getDoctrine()->getRepository(Product::class);
-        return $this->render('products.html.twig', ['products' => $repository->findAll()]);
+        return $this->render('products.html.twig', ['products' => $repository->findAll(), 'user' => $user]);
     }
 
     /**
@@ -93,5 +94,11 @@ class StoreController extends AbstractController
         return $this->render('form', [
             'form' => $form->createView()
         ]);
+    }
+
+    private function getActiveUser(): ?User
+    {
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        return $repository->getTargetUser();
     }
 }

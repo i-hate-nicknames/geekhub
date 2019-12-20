@@ -10,7 +10,14 @@
 <div class="hello">Hello {{ user.name }}</div>
 <div class="title">Favorites</div>
 <div class="favorites">
-    <div class="products">products be here</div>
+    <div class="products">
+        {% for product in user.products %}
+            <div class="product">
+                <div class="name"><a href="{{ path('product', {id: product.id}) }}">{{ product.title }}</a></div>
+                <div class="price">{{ product.price }}</div>
+            </div>
+        {% endfor %}
+    </div>
     <div class="users">users be here</div>
 </div>
     {% else %}

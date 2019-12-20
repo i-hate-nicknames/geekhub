@@ -18,6 +18,11 @@
             <td>{{ product.createdAt | date("m/d/Y H:m:s")}}</td>
             <td><a href="{{ path('product', {'id': product.id}) }}">Details</a></td>
             <td><a href="{{ path('editProduct', {'id': product.id}) }}">Edit</a></td>
+            {% if (user) %}
+                {% if not (user.hasProduct(product)) %}
+                <td><a href="{{ path('favoritesAddProduct', {'id': product.id}) }}">Add to favorites</a></td>
+                {% endif %}
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

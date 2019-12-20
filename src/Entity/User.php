@@ -117,6 +117,11 @@ class User
         return $this;
     }
 
+    public function hasProduct(Product $product): bool
+    {
+        return $this->products->contains($product);
+    }
+
     public function getIsTarget(): ?bool
     {
         return $this->isTarget;
