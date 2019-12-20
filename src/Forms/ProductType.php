@@ -5,6 +5,7 @@ namespace App\Forms;
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -22,7 +23,12 @@ class ProductType extends AbstractType
             ->add('createdAt', DateTimeType::class, [
                 'html5' => 'true',
                 'date_widget' => 'single_text',
-                'time_widget' => 'single_text'
+                'time_widget' => 'single_text',
+                'disabled' => 'true'
+            ])
+            ->add('goOnSale', DateType::class, [
+                'html5' => 'true',
+                'widget' => 'single_text'
             ])
             ->add('save', SubmitType::class);
     }
