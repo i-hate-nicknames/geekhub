@@ -38,6 +38,11 @@ class User
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isTarget = false;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -108,6 +113,18 @@ class User
             $this->products->removeElement($product);
             $product->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getIsTarget(): ?bool
+    {
+        return $this->isTarget;
+    }
+
+    public function setIsTarget(bool $isTarget): self
+    {
+        $this->isTarget = $isTarget;
 
         return $this;
     }

@@ -24,6 +24,9 @@ class UserType extends AbstractType
             ->add('male', CheckboxType::class, [
                 'required' => false
             ])
+            ->add('isTarget', CheckboxType::class, [
+                'required' => false
+            ])
             ->add('save', SubmitType::class);
     }
 
