@@ -26,6 +26,15 @@ class StoreController extends AbstractController
     }
 
     /**
+     * @Route("/testTwig", name="testTwig")
+     * @return Response
+     */
+    public function testTwig()
+    {
+        return $this->render('test-twig.html.twig');
+    }
+
+    /**
      * @Route("/categories", name="categories")
      * @return Response
      * @throws \Exception
