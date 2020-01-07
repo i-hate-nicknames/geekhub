@@ -1,14 +1,5 @@
 {% extends "base.html.twig" %}
 {% block body %}
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-        td, th {
-            border: 1px solid #333;
-            padding: 5px 10px;
-        }
-    </style>
     <table>
         <tr><th>Name</th><th>Age</th><th>Gender</th></tr>
         {% for user in users %}
