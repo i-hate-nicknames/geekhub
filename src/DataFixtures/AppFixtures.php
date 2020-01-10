@@ -4,14 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Product;
-use App\Entity\ProductPosition;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    const NUM_USERS = 20;
+    const NUM_USERS = 5;
     const NUM_CATEGORIES = 30;
     const NUM_PRODUCTS = 100;
 
@@ -20,33 +20,35 @@ class AppFixtures extends Fixture
         $users = [];
         for ($i = 0; $i < self::NUM_USERS; ++$i) {
             $user = new User();
-            $user->setName('user' . $i);
+            $user->setName('user' . $i)
+                ->setAge($i)
+                ->setMale($i % 2 === 0);
             $manager->persist($user);
             $users[] = $user;
         }
         $cats = [];
         for ($i = 0; $i < self::NUM_CATEGORIES; ++$i) {
             $category = new Category();
-            $category->setName('cat' . $i);
+            $category->setTitle('cat' . $i);
             $manager->persist($category);
             $cats[] = $category;
         }
 
         for ($i = 0; $i < self::NUM_PRODUCTS; ++$i) {
-            $productUser = $users[$i % self::NUM_USERS];
             $product = new Product();
-            $position = new ProductPosition();
-            $manager->persist($position);
-            $position->setProduct($product)
-                ->setCategory($cats[$i % self::NUM_CATEGORIES])
-                ->setPosition($i);
-            $product->setName('product' . $i)
-                ->setDescription('descr' . $i)
+            $product->setTitle('product' . $i)
                 ->setPrice(10 * $i)
-                ->setQty(2 * $i)
-                ->addProductPosition($position)
-                ->setUser($productUser);
-            $productUser->addProduct($product);
+                ->setCreatedAt(new DateTime())
+                ->addUser($users[$i % self::NUM_USERS])
+                ->setUpdatedAt(new DateTime());
+            if ($i % 2 === 0) {
+                // for every second product add another user
+                $product->addUser($users[($i+1) % self::NUM_USERS]);
+            }
+            $cat = $cats[$i % self::NUM_CATEGORIES];
+            $cat->addProduct($product);
+            $manager->persist($cat);
+
             $manager->persist($product);
         }
         $manager->flush();

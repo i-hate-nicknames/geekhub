@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+    favorites
+{% endblock %}
+
+{% block body %}
+    {% if (user) %}
+<div class="hello">Hello {{ user.name }}</div>
+<div class="title">Favorites</div>
+<div class="favorites">
+    <div class="products">
+        {% for product in user.products %}
+            <div class="product">
+                <div class="name"><a href="{{ path('product', {id: product.id}) }}">{{ product.title }}</a></div>
+                <div class="price">{{ product.price }}</div>
+                <div class="remove"><a href="{{ path('favoritesRemoveProduct', {id: product.id}) }}">Remove</a></div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="users">
+        {% for user in user.favoriteUsers %}
+            <div class="user">
+                <div class="name"><a href="{{ path('editUser', {id: user.id}) }}">{{ user.name }}</a></div>
+                <div class="remove"><a href="{{ path('favoritesRemoveUser', {id: user.id}) }}">Remove</a></div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+    {% else %}
+    <div class="h1">Please, log in</div>
+    {% endif %}
+{% endblock %}

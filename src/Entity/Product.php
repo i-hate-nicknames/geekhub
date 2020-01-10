@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinTable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Product
 {
@@ -22,7 +24,7 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $title;
 
     /**
      * @ORM\Column(type="integer")
@@ -30,29 +32,34 @@ class Product
     private $price;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="datetime")
      */
-    private $qty;
+    private $createdAt;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="datetime")
      */
-    private $description;
+    private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
+     */
+    private $category;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="products")
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductPosition", mappedBy="product", orphanRemoval=true)
+     * @ORM\Column(type="date", nullable=true)
+     * @Assert\GreaterThan("today")
      */
-    private $productPositions;
+    private $goOnSale;
 
     public function __construct()
     {
-        $this->productPositions = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -60,14 +67,14 @@ class Product
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): self
+    public function setTitle(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
@@ -84,80 +91,93 @@ class Product
         return $this;
     }
 
-    public function getQty(): ?int
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->qty;
+        return $this->createdAt;
     }
 
-    public function setQty(int $qty): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->qty = $qty;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->description;
+        return $this->updatedAt;
     }
 
-    public function setDescription(string $description): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->description = $description;
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection|User[]
      */
-    public function getCategories(): Collection
-    {
-        return $this->getProductPositions()->map(function ($position) {
-            return $position->getCategory();
-        });
-    }
-
-    public function getUser(): ?User
+    public function getUser(): Collection
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function addUser(User $user): self
     {
-        $this->user = $user;
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->user->contains($user)) {
+            $this->user->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    public function getGoOnSale(): ?\DateTimeInterface
+    {
+        return $this->goOnSale;
+    }
+
+    public function setGoOnSale(?\DateTimeInterface $goOnSale): self
+    {
+        $this->goOnSale = $goOnSale;
 
         return $this;
     }
 
     /**
-     * @return Collection|ProductPosition[]
+     * @ORM\PrePersist
      */
-    public function getProductPositions(): Collection
+    public function setCreatedAtValue()
     {
-        return $this->productPositions;
+        $this->createdAt = new \DateTime();
     }
 
-    public function addProductPosition(ProductPosition $productPosition): self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
     {
-        if (!$this->productPositions->contains($productPosition)) {
-            $this->productPositions[] = $productPosition;
-            $productPosition->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductPosition(ProductPosition $productPosition): self
-    {
-        if ($this->productPositions->contains($productPosition)) {
-            $this->productPositions->removeElement($productPosition);
-            // set the owning side to null (unless already changed)
-            if ($productPosition->getProduct() === $this) {
-                $productPosition->setProduct(null);
-            }
-        }
-
-        return $this;
+        $this->updatedAt = new \DateTime();
     }
 }

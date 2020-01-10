@@ -19,18 +19,39 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="user")
+     * @ORM\Column(type="integer")
+     */
+    private $age;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $male;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Product", mappedBy="user")
      */
     private $products;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isTarget = false;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     */
+    private $favoriteUsers;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->favoriteUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,6 +71,30 @@ class User
         return $this;
     }
 
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): self
+    {
+        $this->age = $age;
+
+        return $this;
+    }
+
+    public function getMale(): ?bool
+    {
+        return $this->male;
+    }
+
+    public function setMale(bool $male): self
+    {
+        $this->male = $male;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Product[]
      */
@@ -62,7 +107,7 @@ class User
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setUser($this);
+            $product->addUser($this);
         }
 
         return $this;
@@ -72,10 +117,55 @@ class User
     {
         if ($this->products->contains($product)) {
             $this->products->removeElement($product);
-            // set the owning side to null (unless already changed)
-            if ($product->getUser() === $this) {
-                $product->setUser(null);
-            }
+            $product->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    public function hasProduct(Product $product): bool
+    {
+        return $this->products->contains($product);
+    }
+
+    public function hasFavoriteUser(User $user): bool
+    {
+        return $this->favoriteUsers->contains($user);
+    }
+
+    public function getIsTarget(): ?bool
+    {
+        return $this->isTarget;
+    }
+
+    public function setIsTarget(bool $isTarget): self
+    {
+        $this->isTarget = $isTarget;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getFavoriteUsers(): Collection
+    {
+        return $this->favoriteUsers;
+    }
+
+    public function addFavoriteUser(self $favoriteUser): self
+    {
+        if (!$this->favoriteUsers->contains($favoriteUser)) {
+            $this->favoriteUsers[] = $favoriteUser;
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteUser(self $favoriteUser): self
+    {
+        if ($this->favoriteUsers->contains($favoriteUser)) {
+            $this->favoriteUsers->removeElement($favoriteUser);
         }
 
         return $this;

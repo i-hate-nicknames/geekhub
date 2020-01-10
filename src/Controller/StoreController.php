@@ -2,43 +2,84 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Forms\ProductType;
-use App\Services\Store;
+use App\Forms\UserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function var_export;
 
 class StoreController extends AbstractController
 {
     /**
      * @Route("/", name="home")
-     * @param Store $store
      * @return Response
      * @throws \Exception
      */
-    public function hello(Store $store)
+    public function home()
     {
-        return $this->render('categories.html.twig', ['categories' => $store->getProductsGroupedByCategory()]);
+        return $this->redirectToRoute('categories');
     }
 
     /**
-     * @Route("/form")
+     * @Route("/categories", name="categories")
+     * @return Response
+     * @throws \Exception
      */
-    public function form(Request $request)
+    public function categories()
     {
-        $product = new Product();
+        $repository = $this->getDoctrine()->getRepository(Category::class);
+        return $this->render('categories.html.twig', ['categories' => $repository->findAll()]);
+    }
+
+    /**
+     * @Route("/products", name="products")
+     * @return Response
+     * @throws \Exception
+     */
+    public function products()
+    {
+        $user = $this->getActiveUser();
+        $repository = $this->getDoctrine()->getRepository(Product::class);
+        return $this->render('products.html.twig', ['products' => $repository->findAll(), 'user' => $user]);
+    }
+
+    /**
+     * @Route("/product/{id}", name="product")
+     * @param int $id
+     * @return Response
+     */
+    public function product(int $id)
+    {
+        $product = $this->getDoctrine()
+            ->getRepository(Product::class)
+            ->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id ' . $id
+            );
+        }
+
+        return $this->render('product.html.twig', ['product' => $product]);
+    }
+
+    /**
+     * @Route("/product/{id}/edit", name="editProduct")
+     * @param int $id
+     * @return Response
+     */
+    public function editProduct(int $id, Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository(Product::class);
+        $product = $repository->find($id);
+
         $form = $this->createForm(ProductType::class, $product);
-
         $form->handleRequest($request);
-
-        $repository = $this->getDoctrine()->getRepository(User::class);
-
-        $user = $repository->findOneBy(['name' => 'user1']);
-        $product->setUser($user);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -47,7 +88,7 @@ class StoreController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($product);
             $entityManager->flush();
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('editProduct', ['id' => $id]);
         }
 
         return $this->render('form', [
@@ -55,43 +96,9 @@ class StoreController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/createProduct/{name}/{price}/{qty}/{description}")
-     * @param Store $store
-     * @param $name
-     * @param int $price
-     * @param int $qty
-     * @param string $description
-     * @return Response
-     */
-    public function createProduct(Store $store, $name, $price = 0, $qty = 0, $description = '')
+    private function getActiveUser(): ?User
     {
-        $store->createProduct($name, $qty, $price, $description);
-        return $this->redirect('/');
-    }
-
-    /**
-     * @Route("/moveProduct/{productId}/{target}")
-     * @param $productId
-     * @param $target
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Exception
-     */
-    public function moveProduct(Store $store, $productId, $target)
-    {
-        $store->move($productId, $target);
-        return $this->redirect('/');
-    }
-
-    /**
-     * @Route("/createCategory/{name}")
-     * @param Store $store
-     * @param string $name
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function createCategory(Store $store, string $name)
-    {
-        $store->createCategory($name);
-        return $this->redirect('/');
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        return $repository->getTargetUser();
     }
 }

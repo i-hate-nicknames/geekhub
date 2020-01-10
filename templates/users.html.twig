@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td, th {
+            border: 1px solid #333;
+            padding: 5px 10px;
+        }
+    </style>
+    <table>
+        <tr><th>Name</th><th>Age</th><th>Gender</th></tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.age }}</td>
+            <td>{% if user.male %}Male{% else %}Female{% endif %}</td>
+            <td><a href="{{ path('editUser', {'id': user.id}) }}">Edit</a></td>
+            {% if (activeUser) %}
+                {% if (activeUser.id == user.id) %}
+                    <td>It's you!</td>
+                {% elseif not (activeUser.hasFavoriteUser(user)) %}
+                    <td><a href="{{ path('favoritesAddUser', {'id': user.id}) }}">Add to favorites</a></td>
+                {% else %}
+                    <td><a href="{{ path('favoritesRemoveUser', {'id': user.id}) }}">Remove from favorites</a></td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

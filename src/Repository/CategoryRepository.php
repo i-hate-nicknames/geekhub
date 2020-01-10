@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -49,16 +47,4 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
     */
-
-    public function getCategoriesWithProducts()
-    {
-        return $this->createQueryBuilder('c')
-            ->select('c,p,pp')
-            ->leftJoin('c.productPositions', 'pp')
-            ->join('pp.product', 'p')
-            ->orderBy('c.id', 'desc')
-            ->addOrderBy('pp.position', 'asc')
-            ->getQuery()
-            ->getResult();
-    }
 }

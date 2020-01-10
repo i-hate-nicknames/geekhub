@@ -21,16 +21,16 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductPosition", mappedBy="category", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
      */
-    private $productPositions;
+    private $products;
 
     public function __construct()
     {
-        $this->productPositions = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -38,14 +38,14 @@ class Category
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): self
+    public function setTitle(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
@@ -55,36 +55,26 @@ class Category
      */
     public function getProducts(): Collection
     {
-        return $this->getProductPositions()->map(function ($position) {
-            return $position->getProduct();
-        });
+        return $this->products;
     }
 
-    /**
-     * @return Collection|ProductPosition[]
-     */
-    public function getProductPositions(): Collection
+    public function addProduct(Product $product): self
     {
-        return $this->productPositions;
-    }
-
-    public function addProductPosition(ProductPosition $productPosition): self
-    {
-        if (!$this->productPositions->contains($productPosition)) {
-            $this->productPositions[] = $productPosition;
-            $productPosition->setCategory($this);
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeProductPosition(ProductPosition $productPosition): self
+    public function removeProduct(Product $product): self
     {
-        if ($this->productPositions->contains($productPosition)) {
-            $this->productPositions->removeElement($productPosition);
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
             // set the owning side to null (unless already changed)
-            if ($productPosition->getCategory() === $this) {
-                $productPosition->setCategory(null);
+            if ($product->getCategory() === $this) {
+                $product->setCategory(null);
             }
         }
 
