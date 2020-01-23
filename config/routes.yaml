@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+lhis:
+    path: /lhis
+    controller: App\Lhis\MyBundle\Controller\TestController::index

@@ -109,12 +109,10 @@ class UserController extends AbstractController
         $product = $repo->find($id);
         if (!$product) {
             $this->addFlash('error', 'Product doesn\'t exist');
-            // todo: redirect to referer
             return new RedirectResponse($referer);
         }
         if (!$user->hasProduct($product)) {
             $this->addFlash('error', 'This product is not in your favorite list');
-            // todo: redirect to referer
             return new RedirectResponse($referer);
         }
         $user->removeProduct($product);
@@ -164,12 +162,10 @@ class UserController extends AbstractController
         $fav = $repo->find($id);
         if (!$fav) {
             $this->addFlash('error', 'User doesn\'t exist');
-            // todo: redirect to referer
             return new RedirectResponse($referer);
         }
         if (!$user->hasFavoriteUser($fav)) {
             $this->addFlash('error', 'This user is not in your favorite list');
-            // todo: redirect to referer
             return new RedirectResponse($referer);
         }
         $user->removeFavoriteUser($fav);
